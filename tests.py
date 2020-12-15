@@ -79,3 +79,7 @@ w_balance = client.get_asset_balance(asset='WBTC')
 
 print("BTC balance:", float(b_balance["free"]) + float(b_balance["locked"]))
 print("WBTC balance:", float(w_balance["free"]) + float(w_balance["locked"]))
+
+# order = client.order_limit_buy(symbol='BNBBTC', quantity=100, price='0.00001')
+
+# order = client.order_limit_sell(symbol='BNBBTC', quantity=100, price='0.00001')
