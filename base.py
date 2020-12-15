@@ -5,7 +5,7 @@ import datetime
 from time import sleep
 
 # import other funcs to make everything more readable
-from misc_funcs import my_median, price_round, quant_round, percent_change
+from misc_funcs import median, price_round, quant_round, percent_change
 
 #########################################################
 
@@ -24,19 +24,26 @@ client = Client(pub, priv)
 
 #########################################################
 
-server_time = client.get_server_time()
 
-readable_time = datetime.datetime.fromtimestamp(
-    round(server_time["serverTime"]) / 1000).strftime('%Y-%m-%d %H:%M:%S')
+def header() -> None:
 
-print(readable_time)
+    server_time = client.get_server_time()
 
-tickers = client.get_ticker(symbol="WBTCBTC")
+    readable_time = datetime.datetime.fromtimestamp(
+        round(server_time["serverTime"]) / 1000).strftime('%Y-%m-%d %H:%M:%S')
 
-ask = tickers["askPrice"]
-print("current ask price:", ask)
-bid = tickers["bidPrice"]
-print("current bid price:", bid)
+    pair_data = client.get_ticker(symbol="WBTCBTC")
+    last_price = pair_data["lastPrice"]
 
-last_price = tickers["lastPrice"]
-print("last price:", last_price)
+    candle_data = client.get_klines(symbol="WBTCBTC",
+                                    interval="1d",
+                                    limit="21")
+
+    high_median, low_median = median(candle_data)
+
+    print(readable_time, "| Open Orders =", None, "| High Median ≈",
+          high_median, "| Low Median ≈", low_median, "| Last price =",
+          price_round(last_price))
+
+
+header()

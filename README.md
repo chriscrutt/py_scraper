@@ -19,7 +19,11 @@
 - [x] seperate page for APIs
 
 ## running bot
-- [x] get bid & ask price, time, and last price
+- [ ] display header
+    - [x] time
+    - [ ] # open orders
+    - [ ] median high/low price
+    - [x] and last price
 - [ ] get median highs and lows of past 21 days
 - [ ] get available & total balance
 - [ ] take what is higher, ask or median high price

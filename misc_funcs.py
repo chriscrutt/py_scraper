@@ -1,23 +1,38 @@
-from typing import List
+from typing import List, Union
+
+
+def price_round(price: Union[str, float]) -> float:  # pylint: disable=E1136  # pylint/issues/3139
+    return round(float(price), 5)
+
+
+def quant_round(quant: Union[str, float]) -> float: # pylint: disable=E1136  # pylint/issues/3139
+    return round(float(quant), 4)
+
+
+def percent_change(new: float, old: float) -> float:
+    return (new - old) / old
+
 
 # get median of an array
-def my_median(sample: List[float]) -> float:
-    n = len(sample)
+def median(candles: List[float]) -> float:
+
+    # creating an array for all highs and lows of candles, as well as volume
+    high: List[float] = []
+    low: List[float] = []
+
+    # appends highs and lows of candles to respective arrays, as well as volume
+    for candle in candles:
+        high.append(float(candle[2]))
+        low.append(float(candle[3]))
+
+    n = len(candles)
     index = n // 2
 
     # Sample with an odd number of observations
     if n % 2:
-        return sorted(sample)[index]
+        return sorted(high)[index], sorted(low)[index]
 
     # Sample with an even number of observations
-    return sum(sorted(sample)[index - 1:index + 1]) / 2
-
-
-def price_round(price: float) -> float:
-    return round(price * 100000) / 100000
-
-def quant_round(quant: float) -> float:
-    return round(quant * 10000) / 10000
-
-def percent_change(new: float, old: float) -> float:
-    return (new - old) / old
+    return price_round(sum(sorted(high)[index - 1:index + 1]) /
+                       2), price_round(
+                           sum(sorted(low)[index - 1:index + 1]) / 2)
