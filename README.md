@@ -25,14 +25,16 @@
     - [x] median high/low price
     - [x] and last price
 - [x] get median highs and lows of past 21 days
-- [ ] get available & total balance
-- [ ] take what is higher, ask or median high price
+- [x] get available & total balance
+- [x] take what is higher, ask or median high price
     - if the percentage difference between that & bid price > 0.16%
         - (wbtc a + wbtc o + (btc a + btc o) / price) / 190 = quantity
         - see if WBTC balance available > quantity
         - create sell order for quantity & highest price
-- [ ] take what is lower, bid or median low price
+- [x] take what is lower, bid or median low price
     - if the percentage difference between that & ask price > 0.16%
         - (wbtc a + wbtc o + (btc a + btc o) / price) / 190 = quantity
         - see if BTC balance available > quantity * lowest price
         - create sell order for quantity & lowest price
+- [x] checking old orders
+- [ ] creating new orders
