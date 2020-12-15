@@ -12,7 +12,7 @@
 - [x] current price func
 - [x] is order fulfilled func
 - [x] book ticker func (gets current ask and bid)
-- [ ] balance func
+- [x] balance func
 - [ ] buy/sell funcs
 
 ## other stuff

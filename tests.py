@@ -73,3 +73,9 @@ ask = tickers["askPrice"]
 print("current ask price:", ask)
 bid = tickers["bidPrice"]
 print("current bid price:", bid)
+
+b_balance = client.get_asset_balance(asset='BTC')
+w_balance = client.get_asset_balance(asset='WBTC')
+
+print("BTC balance:", float(b_balance["free"]) + float(b_balance["locked"]))
+print("WBTC balance:", float(w_balance["free"]) + float(w_balance["locked"]))
