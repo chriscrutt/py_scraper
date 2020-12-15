@@ -16,6 +16,9 @@ from datetime import datetime
 # to format the date we get from the server
 from date_format import convert_date
 
+# import other funcs to make everything more readable
+from misc_funcs import my_median
+
 # setting up api keys
 pub = api_key
 priv = api_secret
@@ -47,21 +50,6 @@ for candle in tickers:
 
 #########################################################
 
-
-# get median of an array
-def my_median(sample: List[float]) -> float:
-    n = len(sample)
-    index = n // 2
-
-    # Sample with an odd number of observations
-    if n % 2:
-        return sorted(sample)[index]
-
-    # Sample with an even number of observations
-    return sum(sorted(sample)[index - 1:index + 1]) / 2
-
-
-# finds median highs and lows
 highMedian = round(my_median(high) * 100000) / 100000
 lowMedian = round(my_median(low) * 100000) / 100000
 

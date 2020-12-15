@@ -1,7 +1,8 @@
 # TODO:
 ## seperate functions
 - [x] create UNIX time to readable time func
-- [ ] optional round/floor (to certain decimal) function depending on situation
+- [x] round for price of crypto
+- [x] round for quantity of crypto
 - [x] median function
 - [ ] finding percent changed function
 - [ ] sleep func
