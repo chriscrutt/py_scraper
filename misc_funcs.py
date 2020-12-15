@@ -1,12 +1,10 @@
 from typing import List, Union
 
-
-def price_round(price: Union[str, float]) -> float:  # pylint: disable=E1136  # pylint/issues/3139
-    return round(float(price), 5)
+from math import ceil, floor
 
 
-def quant_round(quant: Union[str, float]) -> float: # pylint: disable=E1136  # pylint/issues/3139
-    return round(float(quant), 4)
+def quant_round(quant: Union[str, float]) -> float:  # pylint: disable=E1136  # pylint/issues/3139
+    return floor(float(quant) * 10000) / 10000
 
 
 def percent_change(new: float, old: float) -> float:

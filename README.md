@@ -24,7 +24,7 @@
     - [x] # open orders
     - [x] median high/low price
     - [x] and last price
-- [ ] get median highs and lows of past 21 days
+- [x] get median highs and lows of past 21 days
 - [ ] get available & total balance
 - [ ] take what is higher, ask or median high price
     - if the percentage difference between that & bid price > 0.16%

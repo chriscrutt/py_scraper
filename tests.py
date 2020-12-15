@@ -62,6 +62,8 @@ if order_status["status"] == "FILLED":
     print("order ID", order_status["orderId"], "if filled")
 else:
     print("order ID", order_status["orderId"], "if not filled")
+    
+print(order_status)
 
 #########################################################
 
