@@ -1,18 +1,18 @@
 # TODO:
 ## seperate functions
-- [ ] create UNIX time to readable time func
+- [x] create UNIX time to readable time func
 - [ ] optional round/floor (to certain decimal) function depending on situation
-- [ ] median function
+- [x] median function
 - [ ] finding percent changed function
 - [ ] sleep func
 
 ## api functions
-- [ ] candles sticks func
-- [ ] current price func
-- [ ] is order is fulfilled func
-- [ ] book ticker func (idr what this is)
+- [x] candles sticks func
+- [x] current price func
+- [ ] is order fulfilled func
+- [ ] book ticker func (gets current ask and bid)
 - [ ] balance func
 - [ ] buy/sell funcs
 
 ## other stuff
-- [ ] seperate page for APIs
+- [x] seperate page for APIs
