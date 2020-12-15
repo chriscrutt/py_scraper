@@ -19,9 +19,9 @@
 - [x] seperate page for APIs
 
 ## running bot
-- [ ] display header
+- [x] display header
     - [x] time
-    - [ ] # open orders
+    - [x] # open orders
     - [x] median high/low price
     - [x] and last price
 - [ ] get median highs and lows of past 21 days

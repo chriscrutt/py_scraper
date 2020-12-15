@@ -41,7 +41,11 @@ def header() -> None:
 
     high_median, low_median = median(candle_data)
 
-    print(readable_time, "| Open Orders =", None, "| High Median ≈",
+    orders = client.get_open_orders(symbol='WBTCBTC')
+        
+    num_orders = len(orders)
+
+    print(readable_time, "| Open Orders =", num_orders, "| High Median ≈",
           high_median, "| Low Median ≈", low_median, "| Last price =",
           price_round(last_price))
 

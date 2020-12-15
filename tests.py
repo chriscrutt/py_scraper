@@ -20,7 +20,7 @@ from date_format import convert_date
 from time import sleep
 
 # import other funcs to make everything more readable
-from misc_funcs import my_median, price_round, quant_round, percent_change
+from misc_funcs import median, price_round, quant_round, percent_change
 
 # setting up api keys
 pub = api_key
@@ -35,21 +35,21 @@ client = Client(pub, priv)
 tickers = client.get_klines(symbol="WBTCBTC", interval="1d", limit="21")
 
 # creating an array for all highs and lows of candles, as well as volume
-high: List[float] = []
-low: List[float] = []
+# high: List[float] = []
+# low: List[float] = []
 
 # appends highs and lows of candles to respective arrays, as well as volume
-for candle in tickers:
-    high.append(float(candle[2]))
-    low.append(float(candle[3]))
+# for candle in tickers:
+#     high.append(float(candle[2]))
+#     low.append(float(candle[3]))
 
 #########################################################
 
-highMedian = round(my_median(high) * 100000) / 100000
-lowMedian = round(my_median(low) * 100000) / 100000
+# highMedian = round(my_median(high) * 100000) / 100000
+# lowMedian = round(my_median(low) * 100000) / 100000
 
 # prints the 21 day median of the highs and lows
-print("21 day median high:", highMedian, "| 21 day median low:", lowMedian)
+# print("21 day median high:", highMedian, "| 21 day median low:", lowMedian)
 
 #########################################################
 
