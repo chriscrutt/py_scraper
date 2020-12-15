@@ -1,8 +1,5 @@
-# importing date for a readable server time
-from datetime import datetime
-
-# to format the date we get from the server
-from date_format import convert_date
+# for time
+import datetime
 
 # importing sleep
 from time import sleep
@@ -27,3 +24,19 @@ client = Client(pub, priv)
 
 #########################################################
 
+server_time = client.get_server_time()
+
+readable_time = datetime.datetime.fromtimestamp(
+    round(server_time["serverTime"]) / 1000).strftime('%Y-%m-%d %H:%M:%S')
+
+print(readable_time)
+
+tickers = client.get_ticker(symbol="WBTCBTC")
+
+ask = tickers["askPrice"]
+print("current ask price:", ask)
+bid = tickers["bidPrice"]
+print("current bid price:", bid)
+
+last_price = tickers["lastPrice"]
+print("last price:", last_price)
