@@ -3,7 +3,7 @@ from typing import List, Union
 from math import ceil, floor
 
 
-def quant_round(quant: Union[str, float]) -> float:  # pylint: disable=E1136  # pylint/issues/3139
+def quant_round(quant: Union[str, float]) -> float:  # pylint: disable=E1136
     return floor(float(quant) * 10000) / 10000
 
 
@@ -31,6 +31,6 @@ def median(candles: List[float]) -> float:
         return sorted(high)[index], sorted(low)[index]
 
     # Sample with an even number of observations
-    return price_round(sum(sorted(high)[index - 1:index + 1]) /
-                       2), price_round(
-                           sum(sorted(low)[index - 1:index + 1]) / 2)
+    return round(
+        sum(sorted(high)[index - 1:index + 1]) / 2 * 100000) / 100000, round(
+            sum(sorted(low)[index - 1:index + 1]) / 2 * 100000) / 100000

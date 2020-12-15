@@ -1,14 +1,14 @@
-from typing import List
+# for type-hints
+from typing import List, Optional
 
+# for rounding with prices and amounts
 from math import ceil, floor
-# for time
+
+# for readability for unix time
 import datetime
 
-# importing sleep
-from time import sleep
-
 # import other funcs to make everything more readable
-from misc_funcs import median, quant_round, percent_change
+from misc_funcs import median, quant_round
 
 #########################################################
 
@@ -28,7 +28,7 @@ client = Client(pub, priv)
 #########################################################
 
 
-def header() -> None:
+def header() -> tuple:
 
     server_time = client.get_server_time()
 
@@ -36,7 +36,7 @@ def header() -> None:
         round(server_time["serverTime"]) / 1000).strftime('%Y-%m-%d %H:%M:%S')
 
     pair_data = client.get_ticker(symbol="WBTCBTC")
-    last_price = pair_data["lastPrice"]
+    last_price = float(pair_data["lastPrice"])
 
     candle_data = client.get_klines(symbol="WBTCBTC",
                                     interval="1d",
@@ -52,15 +52,22 @@ def header() -> None:
           high_median, "| Low Median ≈", low_median, "| Last price =",
           round(last_price * 100000) / 100000)
 
-    return low_median, pair_data["bidPrice"], high_median, pair_data[
-        "askPrice"], last_price, pair_data["weightedAvgPrice"]
+    return_val = [
+        low_median, pair_data["bidPrice"], high_median, pair_data["askPrice"],
+        last_price, pair_data["weightedAvgPrice"]
+    ]
+
+    return [float(i) for i in return_val]
 
 
-# header()
-#  * 100000) / 100000
+header()
 
 
-def set_buy_price(prices, ask=0, order=None) -> None:
+def set_buy_price(
+    prices: List[float],
+    ask: Optional[float],  # pylint: disable=E1136
+    order: Optional[dict]  # pylint: disable=E1136
+) -> Optional[float]:  # pylint: disable=E1136
 
     if order:
         sold_price = order["price"]
@@ -77,15 +84,19 @@ def set_buy_price(prices, ask=0, order=None) -> None:
     return price
 
 
-def buy(prices, balances, ask, order) -> None:
+def buy(
+    prices: List[float],
+    balances: List[float],
+    ask: Optional[float],  # pylint: disable=E1136
+    order: Optional[dict]  # pylint: disable=E1136
+) -> Optional[dict]:  # pylint: disable=E1136
 
     price = set_buy_price(prices, ask, order)
-    
+
     if price is None:
         return None
 
-    balance = balances[1]["free"] + balances[1]["locked"] + (
-        balances[0]["free"] + balances[0]["locked"]) / price
+    balance = balances[2] + balances[3] + (balances[0] + balances[1]) / price
 
     quantity = quant_round(balance / 190)
 
@@ -102,7 +113,11 @@ def buy(prices, balances, ask, order) -> None:
         return None
 
 
-def set_sell_price(prices, bid, order) -> None:
+def set_sell_price(
+    prices: List[float],
+    bid: Optional[float],  # pylint: disable=E1136
+    order: Optional[dict]  # pylint: disable=E1136
+) -> Optional[float]:  # pylint: disable=E1136
 
     if order:
         bought_price = order["price"]
@@ -119,15 +134,19 @@ def set_sell_price(prices, bid, order) -> None:
     return price
 
 
-def sell(prices, balances, bid, order) -> None:
+def sell(
+    prices: List[float],
+    balances: List[float],
+    bid: Optional[float],  # pylint: disable=E1136
+    order: Optional[dict]  # pylint: disable=E1136
+) -> Optional[dict]:  # pylint: disable=E1136
 
     price = set_sell_price(prices, bid, order)
-    
+
     if price is None:
         return None
 
-    balance = balances[1]["free"] + balances[1]["locked"] + (
-        balances[0]["free"] + balances[0]["locked"]) / price
+    balance = balances[2] + balances[3] + (balances[0] + balances[1]) / price
 
     quantity = quant_round(balance / 190)
 
@@ -146,12 +165,18 @@ def sell(prices, balances, bid, order) -> None:
 
 def check_orders(orders: List[dict]) -> None:
 
+    new_orders: List[dict] = []
+
     low, bid, high, ask, last, avg = header()
 
-    balances = [
-        client.get_asset_balance(asset='BTC'),
-        client.get_asset_balance(asset='WBTC')
-    ]
+    btc = client.get_asset_balance(asset='BTC')
+    btc_f = float(btc["free"])
+    btc_l = float(btc["locked"])
+    wbtc = client.get_asset_balance(asset='WBTC')
+    wbtc_f = float(wbtc["free"])
+    wbtc_l = float(wbtc["locked"])
+
+    balances = [btc_f, btc_l, wbtc_f, wbtc_l]
 
     for i in range(len(orders)):
         order_status = client.get_order(symbol='WBTCBTC',
@@ -159,16 +184,20 @@ def check_orders(orders: List[dict]) -> None:
 
         if order_status["status"] == "FILLED":
             if order_status["side"] == "SELL":
-                new_order = buy([low, bid, last, avg], balances, None, order_status)
+                new_order = buy([low, bid, last, avg], balances, None,
+                                order_status)
             elif order_status["side"] == "BUY":
-                new_order = sell([high, ask, last, avg], balances, None, order_status)
+                new_order = sell([high, ask, last, avg], balances, None,
+                                 order_status)
             else:
                 raise Exception("order_status doesn't have a side:",
                                 order_status)
-            
+
             if new_order:
                 del orders[i]
-                orders.append(new_order)
+                new_orders.append(new_order)
+
+    orders.extend(new_orders)
 
 
 # my_orders = client.get_open_orders(symbol='WBTCBTC')
