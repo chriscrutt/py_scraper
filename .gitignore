@@ -2,3 +2,4 @@ apis.py
 __pycache__/apis.cpython-39.pyc
 __pycache__/date_format.cpython-39.pyc
 __pycache__/misc_funcs.cpython-39.pyc
+delete.py
