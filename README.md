@@ -4,8 +4,8 @@
 - [x] round for price of crypto
 - [x] round for quantity of crypto
 - [x] median function
-- [ ] finding percent changed function
-- [ ] sleep func
+- [x] finding percent changed function
+- [x] sleep func
 
 ## api functions
 - [x] candles sticks func

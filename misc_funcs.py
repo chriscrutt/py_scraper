@@ -18,3 +18,6 @@ def price_round(price: float) -> float:
 
 def quant_round(quant: float) -> float:
     return round(quant * 10000) / 10000
+
+def percent_change(new: float, old: float) -> float:
+    return (new - old) / old

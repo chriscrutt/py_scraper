@@ -16,8 +16,11 @@ from datetime import datetime
 # to format the date we get from the server
 from date_format import convert_date
 
+# importing sleep
+from time import sleep
+
 # import other funcs to make everything more readable
-from misc_funcs import my_median
+from misc_funcs import my_median, price_round, quant_round, percent_change
 
 # setting up api keys
 pub = api_key
