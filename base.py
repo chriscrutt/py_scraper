@@ -198,3 +198,86 @@ def check_orders(orders: List[dict]) -> None:
                 new_orders.append(new_order)
 
     orders.extend(new_orders)
+
+
+def set_order_price(
+    prices: List[float],
+    b_a: float,
+    side: str,
+    order: Optional[dict]  # pylint: disable=E1136
+) -> Optional[float]:  # pylint: disable=E1136
+
+    if order:
+        old_price = order["price"]
+
+        if side == "SIDE_BUY":
+            prices.append(old_price + old_price * 0.00076)
+            price = floor(max(prices) * 100000) / 100000
+        elif side == "SIDE_SELL":
+            prices.append(old_price - old_price * 0.00076)
+            price = ceil(max(prices) * 100000) / 100000
+        else:
+            raise Exception("no specificed side for order creation")
+
+    else:
+        if side == "SIDE_BUY":
+            price = floor(max(prices) * 100000) / 100000
+        elif side == "SIDE_SELL":
+            price = ceil(max(prices) * 100000) / 100000
+        else:
+            raise Exception("no specificed side for order creation")
+
+        base_price = bid - bid * 0.00076
+
+        if price < base_price:
+            print("our base price is", base_price,
+                  "which is not the min/max price it should be -", price)
+            return None
+
+    return price
+
+
+def create_order(
+    prices: List[float],
+    bid: float,
+    ask: float,
+    side: str,
+    order: Optional[dict],  # pylint: disable=E1136
+    balances: List[float]
+) -> Optional[dict]:  # pylint: disable=E1136
+
+    b_a = bid + ask
+
+    price = set_order_price(prices, b_a, side, order)
+
+    if price is None:
+        return None
+
+    balance = balances[2] + balances[3] + (balances[0] + balances[1]) / price
+
+    quantity = quant_round(balance / 190)
+
+    if side == "SIDE_SELL":
+        if quantity < balance[2]:
+            final_order = client.order_limit_sell(symbol='WBTCBTC',
+                                                  quantity=quantity,
+                                                  price=price)
+            return final_order
+
+        else:
+            print("insufficient balance. Have", balance[0], "BTC but need",
+                  quantity)
+            return None
+
+    if side == "SIDE_BUY":
+        if quantity * price < balance[0]:
+            final_order = client.order_limit_buy(symbol='WBTCBTC',
+                                                 quantity=quantity,
+                                                 price=price)
+            return final_order
+        else:
+            print("insufficient balance. Have", balance[0], "BTC but need",
+                  quantity)
+            return None
+    else:
+        raise Exception("no specificed side for order creation")
