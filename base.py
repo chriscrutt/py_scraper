@@ -77,7 +77,7 @@ def set_buy_price(
         price = floor(min(prices) * 100000) / 100000
         base_price = ask - ask * 0.00076
         if price > base_price:
-            print("lowest bid price is:", price,
+            print("lowest buyable price is:", price,
                   "which is over our max price of:", base_price)
             return None
 
@@ -100,7 +100,7 @@ def buy(
 
     quantity = quant_round(balance / 190)
 
-    if quantity * price < balance[0]["free"]:
+    if quantity * price < balance[0]:
         buy_order = client.order_limit_buy(symbol='WBTCBTC',
                                            quantity=quantity,
                                            price=price)
@@ -108,7 +108,7 @@ def buy(
         return buy_order
 
     else:
-        print("insufficient balance. Have", balance[0]["free"], "BTC but need",
+        print("insufficient balance. Have", balance[0], "BTC but need",
               quantity)
         return None
 
@@ -127,8 +127,8 @@ def set_sell_price(
         price = ceil(max(prices) * 100000) / 100000
         base_price = bid - bid * 0.00076
         if price < base_price:
-            print("lowest bid price is:", price,
-                  "which is over our max price of:", base_price)
+            print("lowest sell price is:", price,
+                  "which is under our min price of:", base_price)
             return None
 
     return price
@@ -150,7 +150,7 @@ def sell(
 
     quantity = quant_round(balance / 190)
 
-    if quantity < balance[1]["free"]:
+    if quantity < balance[2]:
         sell_order = client.order_limit_sell(symbol='WBTCBTC',
                                              quantity=quantity,
                                              price=price)
@@ -158,8 +158,8 @@ def sell(
         return sell_order
 
     else:
-        print("insufficient balance. Have", balance[1]["free"],
-              "WBTC but need", quantity)
+        print("insufficient balance. Have", balance[2], "WBTC but need",
+              quantity)
         return None
 
 
@@ -198,7 +198,3 @@ def check_orders(orders: List[dict]) -> None:
                 new_orders.append(new_order)
 
     orders.extend(new_orders)
-
-
-# my_orders = client.get_open_orders(symbol='WBTCBTC')
-# check_orders(my_orders)
