@@ -38,3 +38,4 @@
         - create sell order for quantity & lowest price
 - [x] checking old orders
 - [ ] creating new orders
+- [ ] create top file/function
