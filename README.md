@@ -22,7 +22,7 @@
 - [ ] display header
     - [x] time
     - [ ] # open orders
-    - [ ] median high/low price
+    - [x] median high/low price
     - [x] and last price
 - [ ] get median highs and lows of past 21 days
 - [ ] get available & total balance
