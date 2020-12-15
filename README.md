@@ -10,8 +10,8 @@
 ## api functions
 - [x] candles sticks func
 - [x] current price func
-- [ ] is order fulfilled func
-- [ ] book ticker func (gets current ask and bid)
+- [x] is order fulfilled func
+- [x] book ticker func (gets current ask and bid)
 - [ ] balance func
 - [ ] buy/sell funcs
 

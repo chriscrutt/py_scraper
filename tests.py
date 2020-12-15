@@ -31,14 +31,6 @@ client = Client(pub, priv)
 
 #########################################################
 
-# pulling (average) price of a ticker
-avg_price = client.get_avg_price(symbol="WBTCBTC")
-
-# prints that average
-print("average price WBTC/BTC:", avg_price["price"])
-
-#########################################################
-
 # getting daily candles from past 21 days
 tickers = client.get_klines(symbol="WBTCBTC", interval="1d", limit="21")
 
@@ -60,3 +52,24 @@ lowMedian = round(my_median(low) * 100000) / 100000
 print("21 day median high:", highMedian, "| 21 day median low:", lowMedian)
 
 #########################################################
+
+my_orders = client.get_open_orders(symbol='WBTCBTC')
+
+order_status = client.get_order(symbol='WBTCBTC',
+                                orderId=my_orders[0]["orderId"])
+
+if order_status["status"] == "FILLED":
+    print("order ID", order_status["orderId"], "if filled")
+else:
+    print("order ID", order_status["orderId"], "if not filled")
+
+#########################################################
+
+tickers = client.get_ticker(symbol="WBTCBTC")
+
+last_price = tickers["lastPrice"]
+print("last price:", last_price)
+ask = tickers["askPrice"]
+print("current ask price:", ask)
+bid = tickers["bidPrice"]
+print("current bid price:", bid)
