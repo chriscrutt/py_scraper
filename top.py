@@ -9,7 +9,7 @@ from time import sleep
 
 def init(apis):
     for api in apis:
-        client = Client(apis[api]["priv"], apis[api]["pub"])
+        client = Client(apis[api]["pub"], apis[api]["priv"])
         orders = client.get_open_orders(symbol='WBTCBTC')
         apis[api]["orders"] = orders
         apis[api]["client"] = client
@@ -24,6 +24,6 @@ def start(apis):
             new_orders = main(apis[api]["client"], apis[api]["orders"])
             apis[api]["orders"] = new_orders
             sleep(21)
-            
-            
+
+
 start(apis)
