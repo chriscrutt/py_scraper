@@ -86,9 +86,11 @@ def set_order_price(
         if side == "SIDE_BUY":
             prices.append(old_price - old_price * 0.00076)
             price = floor(min(prices) * 100000) / 100000
+            return price
         elif side == "SIDE_SELL":
             prices.append(old_price + old_price * 0.00076)
             price = ceil(max(prices) * 100000) / 100000
+            return price
 
     else:
         if side == "SIDE_BUY":
@@ -98,6 +100,7 @@ def set_order_price(
                 print("highest buyable price is:", price,
                       "which is over our max price of:", base_price)
                 return None
+            return price
 
         elif side == "SIDE_SELL":
             price = ceil(max(prices) * 100000) / 100000
@@ -106,8 +109,7 @@ def set_order_price(
                 print("lowest sellable price is:", price,
                       "which is under our min price of:", base_price)
                 return None
-
-    return price
+            return price
 
 
 def create_order(
