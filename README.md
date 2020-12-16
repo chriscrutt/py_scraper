@@ -40,6 +40,3 @@ for prerequesites and such go [here](./tut.md)
 - [x] checking old orders
 - [x] creating new orders
 - [x] create top file/function
-
-# Extra notes
-as of rn we are using 0.076% as the minimum we must make to create a trade
