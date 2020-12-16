@@ -89,8 +89,6 @@ def set_order_price(
         elif side == "SIDE_SELL":
             prices.append(old_price + old_price * 0.00076)
             price = ceil(max(prices) * 100000) / 100000
-        else:
-            raise Exception("no specificed side for order creation")
 
     else:
         if side == "SIDE_BUY":
@@ -108,9 +106,6 @@ def set_order_price(
                 print("lowest sellable price is:", price,
                       "which is under our min price of:", base_price)
                 return None
-
-        else:
-            raise Exception("no specificed side for order creation")
 
     return price
 
@@ -138,10 +133,12 @@ def create_order(
             final_order = client.order_limit_sell(symbol='WBTCBTC',
                                                   quantity=quantity,
                                                   price=price)
+            print("YAYYYYY - put in an order to SELL", final_order["origQty"],
+                  "WBTC for", final_order["price"], "BTC a pop!!!")
             return final_order
 
         else:
-            print("insufficient balance. Have", balance[0], "WBTC but need",
+            print("insufficient balance to sell. Have", balance[0], "WBTC but need",
                   quantity)
             return None
 
@@ -150,9 +147,11 @@ def create_order(
             final_order = client.order_limit_buy(symbol='WBTCBTC',
                                                  quantity=quantity,
                                                  price=price)
+            print("YAYYYYY - put in an order to BUY", final_order["origQty"],
+                  "WBTC for", final_order["price"], "BTC a pop!!!")
             return final_order
         else:
-            print("insufficient balance. Have", balance[0], "BTC but need",
+            print("insufficient balance to buy. Have", balance[0], "BTC but need",
                   quantity)
             return None
 
@@ -177,6 +176,8 @@ def check_orders(header: List[float], orders: List[dict],
             elif order_status["side"] == "BUY":
                 new_order = create_order(price_data, bid, ask, "SIDE_SELL",
                                          order_status, balances)
+            else:
+                raise Exception("no specificed side for order creation\n", order_status)
 
         else:
             new_order = None
