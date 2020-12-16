@@ -37,5 +37,5 @@
         - see if BTC balance available > quantity * lowest price
         - create sell order for quantity & lowest price
 - [x] checking old orders
-- [ ] creating new orders
+- [x] creating new orders
 - [ ] create top file/function

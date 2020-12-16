@@ -7,6 +7,8 @@ from math import ceil, floor
 # for readability for unix time
 import datetime
 
+from time import sleep
+
 # import other funcs to make everything more readable
 from misc_funcs import median, quant_round
 
@@ -58,9 +60,6 @@ def header() -> tuple:
     ]
 
     return [float(i) for i in return_val]
-
-
-header()
 
 
 def get_balances() -> List[float]:
@@ -162,7 +161,8 @@ def create_order(
         raise Exception("no specificed side for order creation")
 
 
-def check_orders(header: List[float], orders: List[dict], balances: List[float]) -> List[dict]:
+def check_orders(header: List[float], orders: List[dict],
+                 balances: List[float]) -> List[dict]:
 
     new_orders: List[dict] = []
 
@@ -213,7 +213,13 @@ def main(orders):
     ask = head[3]
 
     balances = get_balances()
-    
-    check_orders(head, orders, balances)
 
-    create_order(head, bid, ask, "side", None, balances)
+    orders = check_orders(head, orders, balances)
+
+    buy_order = create_order(head, bid, ask, "SIDE_BUY", None, balances)
+    if buy_order:
+        orders.append(buy_order)
+
+    sell_order = create_order(head, bid, ask, "SIDE_SELL", None, balances)
+    if sell_order:
+        orders.append(sell_order)
