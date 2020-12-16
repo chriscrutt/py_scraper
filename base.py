@@ -63,146 +63,22 @@ def header() -> tuple:
 header()
 
 
-def set_buy_price(
-    prices: List[float],
-    ask: Optional[float],  # pylint: disable=E1136
-    order: Optional[dict]  # pylint: disable=E1136
-) -> Optional[float]:  # pylint: disable=E1136
-
-    if order:
-        sold_price = order["price"]
-        prices.append(sold_price - sold_price * 0.00076)
-        price = floor(min(prices) * 100000) / 100000
-    else:
-        price = floor(min(prices) * 100000) / 100000
-        base_price = ask - ask * 0.00076
-        if price > base_price:
-            print("lowest buyable price is:", price,
-                  "which is over our max price of:", base_price)
-            return None
-
-    return price
-
-
-def buy(
-    prices: List[float],
-    balances: List[float],
-    ask: Optional[float],  # pylint: disable=E1136
-    order: Optional[dict]  # pylint: disable=E1136
-) -> Optional[dict]:  # pylint: disable=E1136
-
-    price = set_buy_price(prices, ask, order)
-
-    if price is None:
-        return None
-
-    balance = balances[2] + balances[3] + (balances[0] + balances[1]) / price
-
-    quantity = quant_round(balance / 190)
-
-    if quantity * price < balance[0]:
-        buy_order = client.order_limit_buy(symbol='WBTCBTC',
-                                           quantity=quantity,
-                                           price=price)
-
-        return buy_order
-
-    else:
-        print("insufficient balance. Have", balance[0], "BTC but need",
-              quantity)
-        return None
-
-
-def set_sell_price(
-    prices: List[float],
-    bid: Optional[float],  # pylint: disable=E1136
-    order: Optional[dict]  # pylint: disable=E1136
-) -> Optional[float]:  # pylint: disable=E1136
-
-    if order:
-        bought_price = order["price"]
-        prices.append(bought_price + bought_price * 0.00076)
-        price = ceil(max(prices) * 100000) / 100000
-    else:
-        price = ceil(max(prices) * 100000) / 100000
-        base_price = bid - bid * 0.00076
-        if price < base_price:
-            print("lowest sell price is:", price,
-                  "which is under our min price of:", base_price)
-            return None
-
-    return price
-
-
-def sell(
-    prices: List[float],
-    balances: List[float],
-    bid: Optional[float],  # pylint: disable=E1136
-    order: Optional[dict]  # pylint: disable=E1136
-) -> Optional[dict]:  # pylint: disable=E1136
-
-    price = set_sell_price(prices, bid, order)
-
-    if price is None:
-        return None
-
-    balance = balances[2] + balances[3] + (balances[0] + balances[1]) / price
-
-    quantity = quant_round(balance / 190)
-
-    if quantity < balance[2]:
-        sell_order = client.order_limit_sell(symbol='WBTCBTC',
-                                             quantity=quantity,
-                                             price=price)
-
-        return sell_order
-
-    else:
-        print("insufficient balance. Have", balance[2], "WBTC but need",
-              quantity)
-        return None
-
-
-def check_orders(orders: List[dict]) -> None:
-
-    new_orders: List[dict] = []
-
-    low, bid, high, ask, last, avg = header()
-
+def get_balances() -> List[float]:
     btc = client.get_asset_balance(asset='BTC')
     btc_f = float(btc["free"])
     btc_l = float(btc["locked"])
+
     wbtc = client.get_asset_balance(asset='WBTC')
     wbtc_f = float(wbtc["free"])
     wbtc_l = float(wbtc["locked"])
 
-    balances = [btc_f, btc_l, wbtc_f, wbtc_l]
-
-    for i in range(len(orders)):
-        order_status = client.get_order(symbol='WBTCBTC',
-                                        orderId=orders[i]["orderId"])
-
-        if order_status["status"] == "FILLED":
-            if order_status["side"] == "SELL":
-                new_order = buy([low, bid, last, avg], balances, None,
-                                order_status)
-            elif order_status["side"] == "BUY":
-                new_order = sell([high, ask, last, avg], balances, None,
-                                 order_status)
-            else:
-                raise Exception("order_status doesn't have a side:",
-                                order_status)
-
-            if new_order:
-                del orders[i]
-                new_orders.append(new_order)
-
-    orders.extend(new_orders)
+    return [btc_f, btc_l, wbtc_f, wbtc_l]
 
 
 def set_order_price(
     prices: List[float],
-    b_a: float,
+    bid: float,
+    ask: float,
     side: str,
     order: Optional[dict]  # pylint: disable=E1136
 ) -> Optional[float]:  # pylint: disable=E1136
@@ -211,28 +87,33 @@ def set_order_price(
         old_price = order["price"]
 
         if side == "SIDE_BUY":
-            prices.append(old_price + old_price * 0.00076)
-            price = floor(max(prices) * 100000) / 100000
-        elif side == "SIDE_SELL":
             prices.append(old_price - old_price * 0.00076)
+            price = floor(min(prices) * 100000) / 100000
+        elif side == "SIDE_SELL":
+            prices.append(old_price + old_price * 0.00076)
             price = ceil(max(prices) * 100000) / 100000
         else:
             raise Exception("no specificed side for order creation")
 
     else:
         if side == "SIDE_BUY":
-            price = floor(max(prices) * 100000) / 100000
+            price = floor(min(prices) * 100000) / 100000
+            base_price = ask - ask * 0.00076
+            if price > base_price:
+                print("highest buyable price is:", price,
+                      "which is over our max price of:", base_price)
+                return None
+
         elif side == "SIDE_SELL":
             price = ceil(max(prices) * 100000) / 100000
+            base_price = bid + bid * 0.00076
+            if price < base_price:
+                print("lowest sellable price is:", price,
+                      "which is under our min price of:", base_price)
+                return None
+
         else:
             raise Exception("no specificed side for order creation")
-
-        base_price = bid - bid * 0.00076
-
-        if price < base_price:
-            print("our base price is", base_price,
-                  "which is not the min/max price it should be -", price)
-            return None
 
     return price
 
@@ -246,9 +127,7 @@ def create_order(
     balances: List[float]
 ) -> Optional[dict]:  # pylint: disable=E1136
 
-    b_a = bid + ask
-
-    price = set_order_price(prices, b_a, side, order)
+    price = set_order_price(prices, bid, ask, side, order)
 
     if price is None:
         return None
@@ -265,7 +144,7 @@ def create_order(
             return final_order
 
         else:
-            print("insufficient balance. Have", balance[0], "BTC but need",
+            print("insufficient balance. Have", balance[0], "WBTC but need",
                   quantity)
             return None
 
@@ -281,3 +160,60 @@ def create_order(
             return None
     else:
         raise Exception("no specificed side for order creation")
+
+
+def check_orders(header: List[float], orders: List[dict], balances: List[float]) -> List[dict]:
+
+    new_orders: List[dict] = []
+
+    # low, bid, high, ask, last, avg = header()
+    price_data = header
+    bid = price_data[1]
+    ask = price_data[3]
+
+    # btc = client.get_asset_balance(asset='BTC')
+    # btc_f = float(btc["free"])
+    # btc_l = float(btc["locked"])
+
+    # wbtc = client.get_asset_balance(asset='WBTC')
+    # wbtc_f = float(wbtc["free"])
+    # wbtc_l = float(wbtc["locked"])
+
+    # balances = [btc_f, btc_l, wbtc_f, wbtc_l]
+
+    for i in range(len(orders)):
+        order_status = client.get_order(symbol='WBTCBTC',
+                                        orderId=orders[i]["orderId"])
+
+        if order_status["status"] == "FILLED":
+            if order_status["side"] == "SELL":
+                new_order = create_order(price_data, bid, ask, "SIDE_BUY",
+                                         order_status, balances)
+            elif order_status["side"] == "BUY":
+                new_order = create_order(price_data, bid, ask, "SIDE_SELL",
+                                         order_status, balances)
+            else:
+                raise Exception("order_status doesn't have a side:",
+                                order_status)
+        else:
+            new_order = None
+
+            if new_order:
+                del orders[i]
+                new_orders.append(new_order)
+
+    orders.extend(new_orders)
+
+    return orders
+
+
+def main(orders):
+    head = header()
+    bid = head[1]
+    ask = head[3]
+
+    balances = get_balances()
+    
+    check_orders(head, orders, balances)
+
+    create_order(head, bid, ask, "side", None, balances)
