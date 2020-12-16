@@ -176,7 +176,7 @@ def create_order(
 
         # if not print so & return None
         else:
-            print("insufficient balance to sell. Have", balances[0],
+            print("insufficient balance to sell. Have", balances[2],
                   "WBTC but need", quantity)
             return None
 
