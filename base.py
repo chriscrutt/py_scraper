@@ -94,18 +94,24 @@ def set_order_price(
         # get that order's old price
         old_price = order["price"]
 
-        # if this is to be a buy order
-        if side == "SIDE_BUY":
-            # find lowest trading price & return it
-            prices.append(old_price - old_price * 0.00076)
-            price = floor(min(prices) * 100000) / 100000
-            return price
-        # if this is to be a sell order
-        elif side == "SIDE_SELL":
-            # find highest trading price & return it
-            prices.append(old_price + old_price * 0.00076)
-            price = ceil(max(prices) * 100000) / 100000
-            return price
+        try:
+            # if this is to be a buy order
+            if side == "SIDE_BUY":
+                # find lowest trading price & return it
+                prices.append(old_price - old_price * 0.00076)
+                price = floor(min(prices) * 100000) / 100000
+                return price
+            # if this is to be a sell order
+            elif side == "SIDE_SELL":
+                # find highest trading price & return it
+                prices.append(old_price + old_price * 0.00076)
+                price = ceil(max(prices) * 100000) / 100000
+                return price
+        except TypeError:
+            print("ERROR! old price =", old_price, "\ntotal order =", order)
+            raise Exception(
+                "TypeError: can't multiply sequence by non-int of type 'float'"
+            )
 
     # if an order is not given
     else:
