@@ -46,7 +46,7 @@ def header(orders) -> tuple:
 
     # get's candles from last 21 daily candles
     candle_data = client.get_klines(symbol="WBTCBTC",
-                                    interval="1d",
+                                    interval="4h",
                                     limit="21")
 
     # gets median highs and lows from candle data
@@ -91,11 +91,12 @@ def get_balances() -> List[float]:
 # figure out the price to trade at based on info given
 def set_order_price(
     prices: List[float],
-    bid: float,
-    ask: float,
     side: str,
     order: Optional[dict]  # pylint: disable=E1136
 ) -> Optional[float]:  # pylint: disable=E1136
+
+    low = prices[0]
+    high = prices[2]
 
     # if an order is given
     if order:
@@ -124,7 +125,7 @@ def set_order_price(
             # find lowest trading price
             price = floor(min(prices) * 100000) / 100000
             # create a base that the price must be below
-            base_price = ask - ask * 0.00076
+            base_price = high - high * 0.00076
             # if it's too high, return None
             if price > base_price:
                 print("highest buyable price is:", price,
@@ -138,7 +139,7 @@ def set_order_price(
             # find highest trading price
             price = ceil(max(prices) * 100000) / 100000
             # create a base that the price must be above
-            base_price = bid + bid * 0.00076
+            base_price = low + low * 0.00076
             # if it's too low, return None
             if price < base_price:
                 print("lowest sellable price is:", price,
@@ -154,15 +155,13 @@ def set_order_price(
 # creates a buy/sell order based on given data
 def create_order(
     prices: List[float],
-    bid: float,
-    ask: float,
     side: str,
     order: Optional[dict],  # pylint: disable=E1136
     balances: List[float]
 ) -> Optional[dict]:  # pylint: disable=E1136
 
     # gets best prices
-    price = set_order_price(prices, bid, ask, side, order)
+    price = set_order_price(prices, side, order)
 
     # if there isn't a price, return None
     if price is None:
@@ -219,11 +218,6 @@ def check_orders(header: List[float], orders: List[dict],
     # this will be used to store new orders made
     new_orders: List[dict] = []
 
-    # get all prices needed for trading funcs
-    price_data = header
-    bid = price_data[1]
-    ask = price_data[3]
-
     # going through each open order
     for i in range(len(orders)):
 
@@ -235,11 +229,11 @@ def check_orders(header: List[float], orders: List[dict],
         if order_status["status"] == "FILLED":
             # create the inverse order
             if order_status["side"] == "SELL":
-                new_order = create_order(price_data, bid, ask, "SIDE_BUY",
-                                         order_status, balances)
+                new_order = create_order(header, "SIDE_BUY", order_status,
+                                         balances)
             elif order_status["side"] == "BUY":
-                new_order = create_order(price_data, bid, ask, "SIDE_SELL",
-                                         order_status, balances)
+                new_order = create_order(header, "SIDE_SELL", order_status,
+                                         balances)
             else:
                 raise Exception("no specificed side for order creation\n",
                                 order_status)
@@ -267,18 +261,16 @@ def check_orders(header: List[float], orders: List[dict],
 def main(orders: List[dict]) -> List[dict]:
 
     head = header(orders)
-    bid = head[1]
-    ask = head[3]
 
     balances = get_balances()
 
     orders = check_orders(head, orders, balances)
 
-    buy_order = create_order(head, bid, ask, "SIDE_BUY", None, balances)
+    buy_order = create_order(head, "SIDE_BUY", None, balances)
     if buy_order:
         orders.append(buy_order)
 
-    sell_order = create_order(head, bid, ask, "SIDE_SELL", None, balances)
+    sell_order = create_order(head, "SIDE_SELL", None, balances)
     if sell_order:
         orders.append(sell_order)
 
