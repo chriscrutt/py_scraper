@@ -1,5 +1,9 @@
 for prerequesites and such go [here](./tut.md)
 # TODO:
+## APY calculator
+- [ ] takes starting btc & wbtc balance & timestamp (& price just in case)
+- [ ] does the math to calculate apy based off of current btc & wbtc balance
+
 ## seperate functions
 - [x] create UNIX time to readable time func
 - [x] round for price of crypto
