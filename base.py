@@ -177,7 +177,7 @@ def create_order(
     # if order is to be sold
     if side == "SIDE_SELL":
         # if there's enough WBTC available do a trade & return it
-        if quantity < balance[2]:
+        if quantity < balances[2]:
             final_order = client.order_limit_sell(symbol='WBTCBTC',
                                                   quantity=quantity,
                                                   price=price)
@@ -187,14 +187,14 @@ def create_order(
 
         # if not print so & return None
         else:
-            print("insufficient balance to sell. Have", balance[0],
+            print("insufficient balance to sell. Have", balances[0],
                   "WBTC but need", quantity)
             return None
 
     # if order is to be sold
     if side == "SIDE_BUY":
         # if there's enough BTC available do a trade & return it
-        if quantity * price < balance[0]:
+        if quantity * price < balances[0]:
             final_order = client.order_limit_buy(symbol='WBTCBTC',
                                                  quantity=quantity,
                                                  price=price)
@@ -204,7 +204,7 @@ def create_order(
 
         # if not print so & return None
         else:
-            print("insufficient balance to buy. Have", balance[0],
+            print("insufficient balance to buy. Have", balances[0],
                   "BTC but need", quantity)
             return None
 
