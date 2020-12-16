@@ -266,9 +266,13 @@ def main(orders: List[dict]) -> List[dict]:
 
     orders = check_orders(head, orders, balances)
 
+    balances = get_balances()
+
     buy_order = create_order(head, "SIDE_BUY", None, balances)
     if buy_order:
         orders.append(buy_order)
+
+    balances = get_balances()
 
     sell_order = create_order(head, "SIDE_SELL", None, balances)
     if sell_order:
