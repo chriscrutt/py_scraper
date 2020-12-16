@@ -1,3 +1,4 @@
+for prerequesites and such go [here](./tut.md)
 # TODO:
 ## seperate functions
 - [x] create UNIX time to readable time func
@@ -38,4 +39,7 @@
         - create sell order for quantity & lowest price
 - [x] checking old orders
 - [x] creating new orders
-- [ ] create top file/function
+- [x] create top file/function
+
+# Extra notes
+as of rn we are using 0.076% as the minimum we must make to create a trade
