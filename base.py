@@ -92,7 +92,7 @@ def set_order_price(
     if order:
 
         # get that order's old price
-        old_price = order["price"]
+        old_price = float(order["price"])
 
         try:
             # if this is to be a buy order
