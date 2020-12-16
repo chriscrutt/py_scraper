@@ -13,17 +13,7 @@ from misc_funcs import median, quant_round
 #########################################################
 
 # import stuff for apis
-from apis import api_key, api_secret
-
-# importing binance client
-from binance.client import Client
-
-# setting up api keys
-pub = api_key
-priv = api_secret
-
-# setting up client functions will access
-client = Client(pub, priv)
+# from apis import api_key, api_secret
 
 #########################################################
 
@@ -258,7 +248,10 @@ def check_orders(header: List[float], orders: List[dict],
 
 
 # function for all the marbles
-def main(orders: List[dict]) -> List[dict]:
+def main(lient, orders: List[dict]) -> List[dict]:
+
+    global client
+    client = lient
 
     head = header(orders)
 
@@ -282,7 +275,3 @@ def main(orders: List[dict]) -> List[dict]:
 
 
 #########################################################
-
-orders = client.get_open_orders(symbol='WBTCBTC')
-
-main(orders)
