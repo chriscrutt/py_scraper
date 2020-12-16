@@ -30,7 +30,7 @@ client = Client(pub, priv)
 #########################################################
 
 
-def header() -> tuple:
+def header(orders) -> tuple:
 
     server_time = client.get_server_time()
 
@@ -45,8 +45,6 @@ def header() -> tuple:
                                     limit="21")
 
     high_median, low_median = median(candle_data)
-
-    orders = client.get_open_orders(symbol='WBTCBTC')
 
     num_orders = len(orders)
 
@@ -157,8 +155,6 @@ def create_order(
             print("insufficient balance. Have", balance[0], "BTC but need",
                   quantity)
             return None
-    else:
-        raise Exception("no specificed side for order creation")
 
 
 def check_orders(header: List[float], orders: List[dict],
@@ -166,20 +162,9 @@ def check_orders(header: List[float], orders: List[dict],
 
     new_orders: List[dict] = []
 
-    # low, bid, high, ask, last, avg = header()
     price_data = header
     bid = price_data[1]
     ask = price_data[3]
-
-    # btc = client.get_asset_balance(asset='BTC')
-    # btc_f = float(btc["free"])
-    # btc_l = float(btc["locked"])
-
-    # wbtc = client.get_asset_balance(asset='WBTC')
-    # wbtc_f = float(wbtc["free"])
-    # wbtc_l = float(wbtc["locked"])
-
-    # balances = [btc_f, btc_l, wbtc_f, wbtc_l]
 
     for i in range(len(orders)):
         order_status = client.get_order(symbol='WBTCBTC',
@@ -192,23 +177,21 @@ def check_orders(header: List[float], orders: List[dict],
             elif order_status["side"] == "BUY":
                 new_order = create_order(price_data, bid, ask, "SIDE_SELL",
                                          order_status, balances)
-            else:
-                raise Exception("order_status doesn't have a side:",
-                                order_status)
+
         else:
             new_order = None
 
-            if new_order:
-                del orders[i]
-                new_orders.append(new_order)
+        if new_order:
+            del orders[i]
+            new_orders.append(new_order)
 
     orders.extend(new_orders)
 
     return orders
 
 
-def main(orders):
-    head = header()
+def main(orders: List[dict]) -> List[dict]:
+    head = header(orders)
     bid = head[1]
     ask = head[3]
 
@@ -223,3 +206,10 @@ def main(orders):
     sell_order = create_order(head, bid, ask, "SIDE_SELL", None, balances)
     if sell_order:
         orders.append(sell_order)
+
+    return orders
+
+
+orders = client.get_open_orders(symbol='WBTCBTC')
+
+main(orders)
