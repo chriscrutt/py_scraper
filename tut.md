@@ -18,14 +18,14 @@
 4. paste this into that file:
     ```py
     apis = {
-    "account": {
+    "acount": {
         "pub":
         "PUBLIC",
         "priv":
         "PRIVATE"
     }
     ```
-    substituting PUBLIC and PRIVATE with your public and private keys, respectively
+    substituting `PUBLIC` and `PRIVATE` with your public and private keys, respectively (as well as `account` with a fun name if you'd like)
 5. right now the program is defaulted to making at least 0.076% per trade (0.001% over minimum fee)
     - if you are using BNB to take the place of fees, don't change anything
     - if you aren't using BNB (or don't know what this means), change all occurences of `0.00076` to `0.00101` in the `base.py` file

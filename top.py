@@ -21,6 +21,7 @@ def start(apis):
     apis = init(apis)
     while True:
         for api in apis:
+            print("\n" + api)
             new_orders = main(apis[api]["client"], apis[api]["orders"])
             apis[api]["orders"] = new_orders
             sleep(21)
