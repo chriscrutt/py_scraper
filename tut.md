@@ -7,8 +7,8 @@
         - substitute `python` and `pip` for `python3` and `pip3` (respectively) throughout this tut
 2. make sure you have the binance api helper module installed
     - `pip install python-binance`
-3. create a binance account (here)[https://www.binance.com/en/register?ref=50675748]
-4. create an api key (here)[https://www.binance.com/en/support/articles/360002502072-How-to-create-API]
+3. create a binance account [here](https://www.binance.com/en/register?ref=50675748)
+4. create an api key [here](https://www.binance.com/en/support/articles/360002502072-How-to-create-API)
 5. have at least 0.025 BTC in your spot trading account
 
 ## file wise
