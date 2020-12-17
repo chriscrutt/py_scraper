@@ -1,3 +1,5 @@
+![Manual workflow](https://github.com/chriscrutt/py_scraper/workflows/Manual%20workflow/badge.svg?event=label)
+
 for prerequesites and such go [here](./tut.md)
 # TODO:
 - [ ] output when an old order has been filled
