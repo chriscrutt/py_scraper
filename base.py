@@ -240,11 +240,13 @@ def check_orders(header: List[float], orders: List[dict],
 
         # if there was a new order placed, delete old one & add new to new list
         if new_order:
-            del orders[i]
+            orders[i] = None
             new_orders.append(new_order)
 
     # update old list by extending all the new orders
     orders.extend(new_orders)
+
+    orders = [i for i in orders if i]
 
     # return all the orders now
     return orders
