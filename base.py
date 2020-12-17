@@ -153,7 +153,6 @@ def create_order(
     prices: List[float],
     side: str,
     order: Optional[dict],  # pylint: disable=E1136
-    balances: List[float]
 ) -> Optional[dict]:  # pylint: disable=E1136
 
     # gets best prices
@@ -162,6 +161,8 @@ def create_order(
     # if there isn't a price, return None
     if price is None:
         return None
+
+    balances = get_balances()
 
     # get balance converted to WBTC
     balance = balances[2] + balances[3] + (balances[0] + balances[1]) / price
@@ -208,8 +209,7 @@ def create_order(
 
 
 # looking through old orders in order to update them
-def check_orders(header: List[float], orders: List[dict],
-                 balances: List[float]) -> List[dict]:
+def check_orders(header: List[float], orders: List[dict]) -> List[dict]:
 
     # this will be used to store new orders made
     new_orders: List[dict] = []
@@ -225,11 +225,9 @@ def check_orders(header: List[float], orders: List[dict],
         if order_status["status"] == "FILLED":
             # create the inverse order
             if order_status["side"] == "SELL":
-                new_order = create_order(header, "SIDE_BUY", order_status,
-                                         balances)
+                new_order = create_order(header, "SIDE_BUY", order_status)
             elif order_status["side"] == "BUY":
-                new_order = create_order(header, "SIDE_SELL", order_status,
-                                         balances)
+                new_order = create_order(header, "SIDE_SELL", order_status)
             else:
                 raise Exception("no specificed side for order creation\n",
                                 order_status)
@@ -263,19 +261,13 @@ def main(lient, orders: List[dict]) -> List[dict]:
 
     head = header(orders)
 
-    balances = get_balances()
+    orders = check_orders(head, orders)
 
-    orders = check_orders(head, orders, balances)
-
-    balances = get_balances()
-
-    buy_order = create_order(head, "SIDE_BUY", None, balances)
+    buy_order = create_order(head, "SIDE_BUY", None)
     if buy_order:
         orders.append(buy_order)
 
-    balances = get_balances()
-
-    sell_order = create_order(head, "SIDE_SELL", None, balances)
+    sell_order = create_order(head, "SIDE_SELL", None)
     if sell_order:
         orders.append(sell_order)
 
