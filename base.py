@@ -225,8 +225,10 @@ def check_orders(header: List[float], orders: List[dict]) -> List[dict]:
         if order_status["status"] == "FILLED":
             # create the inverse order
             if order_status["side"] == "SELL":
+                print("hey! a sell order has been filled!")
                 new_order = create_order(header, "SIDE_BUY", order_status)
             elif order_status["side"] == "BUY":
+                print("hey! a buy order has been filled!")
                 new_order = create_order(header, "SIDE_SELL", order_status)
             else:
                 raise Exception("no specificed side for order creation\n",
