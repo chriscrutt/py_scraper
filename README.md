@@ -2,11 +2,11 @@
 
 for prerequesites and such go [here](./tut.md)
 # TODO:
-- [ ] output when an old order has been filled
+- [x] output when an old order has been filled
 ## APY calculator
-- [ ] takes starting btc & wbtc balance & timestamp (& price just in case)
+- [x] takes starting btc & wbtc balance & timestamp (& price just in case)
 - [ ] does the math to calculate apy based off of current btc & wbtc balance
-- [ ] make accessable on github page
+~~- [ ] make accessable on github page~~
 
 ## seperate functions
 - [x] create UNIX time to readable time func
