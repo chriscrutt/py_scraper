@@ -1,4 +1,3 @@
-from math import log
 from apis import apis
 
 from binance.client import Client
@@ -42,16 +41,16 @@ def num_orders(client):
 
 
 def init(apis):
+    print(round(time()), "\n")
     for api in apis:
         print(api)
 
         client = Client(apis[api]["pub"], apis[api]["priv"])
 
+        s_btc, s_btcc, s_wbtc, s_wbtcc = apis[api]["start_price"]
+
         shucks = get_balances(client)
-        btc = shucks[0]
-        btcc = shucks[1]
-        wbtc = shucks[2]
-        wbtcc = shucks[3]
+        btc, btcc, wbtc, wbtcc = shucks
 
         # Total P+I (A):
         # Principal (P):
@@ -60,22 +59,30 @@ def init(apis):
 
         # r = n[(A / P) ^ (1 / nt) - 1]
 
-        A = 0.51  # Total P+I (A)
-        P = 0.5  # Principal (P)
-        t = (round(time()) - start / 1000) / 31557600  # time passed
-        n = num_orders(client) / t  # Compound (n): (orders filled/time passed)
+        avg_price = float(client.get_avg_price(symbol='WBTCBTC')["price"])
+
+        orders_filled = num_orders(client)
+
+        A = btc + btcc + (wbtc + wbtcc) / avg_price  # Total P+I (A)
+        P = 1
+        # P = s_btc + s_btcc + (s_wbtc + s_wbtcc) / avg_price  # Principal (P)
+        t = (round(time()) - start / 1000) / 31557600  # time passed in years
+        n = orders_filled / t  # Compound (n): (orders filled/time passed)
 
         apy = n * ((A / P)**(1 / (n * t)) - 1)
 
-        print(apy)
+        print("orders filled:", orders_filled)
+        print("annual percentage yeild:", str(round(apy * 100, 3)) + "%")
 
-        print("%-20s %4.8f   |   %-21s %4.8f" %
-              ("start btc balance:", btc + btcc, "start wbtc balance:",
-               wbtc + wbtcc))
+        print(
+            "%-20s %4.8f   |   %-21s %4.8f   |   total balance in btc:" %
+            ("start btc balance:", s_btc + s_btcc, "start wbtc balance:",
+             s_wbtc + s_wbtcc), round(P, 8))
 
-        print("%-20s %4.8f   | %23s %4.8f" %
-              ("current btc balance:", btc + btcc, "current wbtc balance:",
-               wbtc + wbtcc))
+        print(
+            "%-20s %4.8f   | %23s %4.8f   |   total balance in btc:" %
+            ("current btc balance:", btc + btcc, "current wbtc balance:",
+             wbtc + wbtcc), round(A, 8))
 
         print(
             "----------------------------------------------------------------------"
