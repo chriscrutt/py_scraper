@@ -1,12 +1,10 @@
-![Manual workflow](https://github.com/chriscrutt/py_scraper/workflows/Manual%20workflow/badge.svg?event=label)
-
 for prerequesites and such go [here](./tut.md)
 # TODO:
 - [x] output when an old order has been filled
 ## APY calculator
 - [x] takes starting btc & wbtc balance & timestamp (& price just in case)
-- [ ] does the math to calculate apy based off of current btc & wbtc balance
-~~- [ ] make accessable on github page~~
+- [x] does the math to calculate apy based off of current btc & wbtc balance & bnb
+- [ ] make accessable on a webpage
 
 ## seperate functions
 - [x] create UNIX time to readable time func
