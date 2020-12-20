@@ -23,12 +23,12 @@ def start(apis):
     while True:
         for api in apiss:
             print("\n" + api)
-            new_orders = main(apis[api]["client"], apis[api]["orders"])
-            apis[api]["orders"] = new_orders
+            new_orders = main(apiss[api]["client"], apiss[api]["orders"])
+            apiss[api]["orders"] = new_orders
             sleep(21)
-            
+
         counter += 1
-        
+
         if counter >= 40:
             start(apis)
 
