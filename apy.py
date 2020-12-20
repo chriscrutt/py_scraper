@@ -20,7 +20,7 @@ def get_balances(client):
     return [btc_f, btc_l, wbtc_f, wbtc_l]
 
 
-start = 1606037036000
+start = 1608435897000
 
 
 def num_orders(client):
@@ -41,13 +41,13 @@ def num_orders(client):
 
 
 def init(apis):
-    print(round(time()), "\n")
+    print(round(time() * 1000), "\n")
     for api in apis:
         print(api)
 
         client = Client(apis[api]["pub"], apis[api]["priv"])
 
-        s_btc, s_btcc, s_wbtc, s_wbtcc = apis[api]["start_balance"]
+        s_btc, s_wbtc = apis[api]["start_balance"]
 
         shucks = get_balances(client)
         btc, btcc, wbtc, wbtcc = shucks
@@ -64,7 +64,7 @@ def init(apis):
         orders_filled = num_orders(client)
 
         A = btc + btcc + (wbtc + wbtcc) / avg_price  # Total P+I (A)
-        P = s_btc + s_btcc + (s_wbtc + s_wbtcc) / avg_price  # Principal (P)
+        P = s_btc + (s_wbtc) / avg_price  # Principal (P)
         t = (round(time()) - start / 1000) / 31557600  # time passed in years
         n = orders_filled / t  # Compound (n): (orders filled/time passed)
 
@@ -75,8 +75,8 @@ def init(apis):
 
         print(
             "%-20s %4.8f   |   %-21s %4.8f   |   total balance in btc:" %
-            ("start btc balance:", s_btc + s_btcc, "start wbtc balance:",
-             s_wbtc + s_wbtcc), round(P, 8))
+            ("start btc balance:", s_btc, "start wbtc balance:", s_wbtc),
+            round(P, 8))
 
         print(
             "%-20s %4.8f   | %23s %4.8f   |   total balance in btc:" %
