@@ -4,7 +4,7 @@ for prerequesites and such go [here](./tut.md)
 ## APY calculator
 - [x] takes starting btc & wbtc balance & timestamp (& price just in case)
 - [x] does the math to calculate apy based off of current btc & wbtc balance & bnb
-- [ ] make accessable on a webpage
+- [x] make accessable on a [webpage](http://104.9.116.163)
 
 ## seperate functions
 - [x] create UNIX time to readable time func
