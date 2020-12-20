@@ -30,6 +30,7 @@ def start(apis):
         counter += 1
 
         if counter >= 40:
+            print("\nrestarting\n")
             start(apis)
 
 

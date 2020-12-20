@@ -1,3 +1,5 @@
+a = ""
+
 from apis import apis
 
 from binance.client import Client
@@ -47,9 +49,9 @@ def num_orders(client):
 
 
 def init(apis):
-    print(round(time() * 1000), "\n")
+    a = round(time() * 1000), "\n"
     for api in apis:
-        print(api)
+        a += api, "\n"
 
         client = Client(apis[api]["pub"], apis[api]["priv"])
 
@@ -77,24 +79,26 @@ def init(apis):
         apy = n * ((A / P)**(1 / (n * t)) - 1)
         b_apy = n * (((A - bnb) / P)**(1 / (n * t)) - 1)
 
-        print("orders filled:", orders_filled)
-        print("annual percentage yeild:",
-              str(round(apy * 100, 3)) + "%   with bnb fees:",
-              str(round(b_apy * 100, 3)) + "%")
+        a += "orders filled:", orders_filled, "\n"
+        a += "annual percentage yeild:", str(
+            round(apy * 100, 3)) + "%   with bnb fees:", str(
+                round(b_apy * 100, 3)) + "%", "\n"
 
-        print(
-            "%-20s %4.8f   |   %-21s %4.8f   |   total balance in btc:" %
-            ("start btc balance:", s_btc, "start wbtc balance:", s_wbtc),
-            round(P, 8))
+        a += "%-20s %4.8f   |   %-21s %4.8f   |   total balance in btc:" % (
+            "start btc balance:", s_btc, "start wbtc balance:", s_wbtc), round(
+                P, 8), "\n"
 
-        print(
-            "%-20s %4.8f   | %23s %4.8f   |   total balance in btc:" %
-            ("current btc balance:", btc + btcc, "current wbtc balance:",
-             wbtc + wbtcc), round(A, 8), "-", bnb, "=", round(A - bnb, 8))
+        a += "%-20s %4.8f   | %23s %4.8f   |   total balance in btc:" % (
+            "current btc balance:", btc + btcc, "current wbtc balance:",
+            wbtc + wbtcc), round(A, 8), "-", bnb, "=", round(A - bnb, 8), "\n"
 
-        print(
-            "----------------------------------------------------------------------"
-        )
+        a += "----------------------------------------------------------------------", "\n\n"
+
+    return a
 
 
-init(apis)
+def eh():
+    return ''.join(map(str, init(apis)))
+
+
+print(eh())
