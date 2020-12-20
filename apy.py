@@ -27,6 +27,10 @@ def num_orders(client):
 
     t = client.get_my_trades(symbol='WBTCBTC', startTime=start, limit=1000)
 
+    avg_price = float(client.get_avg_price(symbol='BNBBTC')["price"])
+
+    bnb = 0
+
     counter = len(t)
 
     while len(t) == 1000:
@@ -35,9 +39,12 @@ def num_orders(client):
                                  startTime=t[len(t) - 1]["time"],
                                  limit=1000)
 
+        for i in range(len(t)):
+            bnb += float(t[i]["commission"])
+
         counter += len(t)
 
-    return counter
+    return counter, bnb * avg_price
 
 
 def init(apis):
@@ -61,7 +68,7 @@ def init(apis):
 
         avg_price = float(client.get_avg_price(symbol='WBTCBTC')["price"])
 
-        orders_filled = num_orders(client)
+        orders_filled, bnb = num_orders(client)
 
         A = btc + btcc + (wbtc + wbtcc) / avg_price  # Total P+I (A)
         P = s_btc + (s_wbtc) / avg_price  # Principal (P)
@@ -69,9 +76,12 @@ def init(apis):
         n = orders_filled / t  # Compound (n): (orders filled/time passed)
 
         apy = n * ((A / P)**(1 / (n * t)) - 1)
+        b_apy = n * (((A - bnb) / P)**(1 / (n * t)) - 1)
 
         print("orders filled:", orders_filled)
-        print("annual percentage yeild:", str(round(apy * 100, 3)) + "%")
+        print("annual percentage yeild:",
+              str(round(apy * 100, 3)) + "%   with bnb fees:",
+              str(round(b_apy * 100, 3)) + "%")
 
         print(
             "%-20s %4.8f   |   %-21s %4.8f   |   total balance in btc:" %
@@ -81,7 +91,7 @@ def init(apis):
         print(
             "%-20s %4.8f   | %23s %4.8f   |   total balance in btc:" %
             ("current btc balance:", btc + btcc, "current wbtc balance:",
-             wbtc + wbtcc), round(A, 8))
+             wbtc + wbtcc), round(A, 8), "-", bnb, "=", round(A - bnb, 8))
 
         print(
             "----------------------------------------------------------------------"
