@@ -10,6 +10,8 @@ import datetime
 # import other funcs to make everything more readable
 from misc_funcs import median, quant_round
 
+from binance.exceptions import BinanceAPIException
+
 #########################################################
 
 # import stuff for apis
@@ -150,9 +152,9 @@ def set_order_price(
 
 # creates a buy/sell order based on given data
 def create_order(
-    prices: List[float],
-    side: str,
-    order: Optional[dict],  # pylint: disable=E1136
+        prices: List[float],
+        side: str,
+        order: Optional[dict],  # pylint: disable=E1136
 ) -> Optional[dict]:  # pylint: disable=E1136
 
     # gets best prices
@@ -174,12 +176,18 @@ def create_order(
     if side == "SIDE_SELL":
         # if there's enough WBTC available do a trade & return it
         if quantity < balances[2]:
-            final_order = client.order_limit_sell(symbol='WBTCBTC',
-                                                  quantity=quantity,
-                                                  price=price)
-            print("YAYYYYY - put in an order to SELL", final_order["origQty"],
-                  "WBTC for", final_order["price"], "BTC a pop!!!")
-            return final_order
+            try:
+                final_order = client.order_limit_sell(symbol='WBTCBTC',
+                                                      quantity=quantity,
+                                                      price=price)
+                print("YAYYYYY - put in an order to SELL",
+                      final_order["origQty"], "WBTC for", final_order["price"],
+                      "BTC a pop!!!")
+                return final_order
+
+            except BinanceAPIException:
+                print("error")
+                return None
 
         # if not print so & return None
         else:
@@ -191,17 +199,22 @@ def create_order(
     if side == "SIDE_BUY":
         # if there's enough BTC available do a trade & return it
         if quantity * price < balances[0]:
-            final_order = client.order_limit_buy(symbol='WBTCBTC',
-                                                 quantity=quantity,
-                                                 price=price)
-            print("YAYYYYY - put in an order to BUY", final_order["origQty"],
-                  "WBTC for", final_order["price"], "BTC a pop!!!")
-            return final_order
+            try:
+                final_order = client.order_limit_buy(symbol='WBTCBTC',
+                                                     quantity=quantity,
+                                                     price=price)
+                print("YAYYYYY - put in an order to BUY",
+                      final_order["origQty"], "WBTC for", final_order["price"],
+                      "BTC a pop!!!")
+                return final_order
+
+            except BinanceAPIException:
+                return None
 
         # if not print so & return None
         else:
             print("insufficient balance to buy. Have", balances[0],
-                  "BTC but need", quantity)
+                  "BTC but need", quantity * price)
             return None
 
 
