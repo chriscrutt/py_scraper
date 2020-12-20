@@ -29,9 +29,9 @@ def num_orders(client):
 
     avg_price = float(client.get_avg_price(symbol='BNBBTC')["price"])
 
-    bnb = 0
-
     counter = len(t)
+
+    bnb = sum([float(i["commission"]) for i in t])
 
     while len(t) == 1000:
 
@@ -39,10 +39,9 @@ def num_orders(client):
                                  startTime=t[len(t) - 1]["time"],
                                  limit=1000)
 
-        for i in range(len(t)):
-            bnb += float(t[i]["commission"])
-
         counter += len(t)
+
+        bnb += sum([float(i["commission"]) for i in t])
 
     return counter, bnb * avg_price
 
