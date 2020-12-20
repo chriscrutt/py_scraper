@@ -7,6 +7,8 @@ from math import ceil, floor
 # for readability for unix time
 import datetime
 
+from time import sleep
+
 # import other funcs to make everything more readable
 from misc_funcs import median, quant_round
 
@@ -240,10 +242,18 @@ def check_orders(header: List[float], orders: List[dict]) -> List[dict]:
             # create the inverse order
             if order_status["side"] == "SELL":
                 print("hey! a sell order has been filled!")
-                new_order = create_order(header, "SIDE_BUY", order_status)
+                try:
+                    new_order = create_order(header, "SIDE_BUY", order_status)
+                except:
+                    sleep(61)
+                    new_order = create_order(header, "SIDE_BUY", order_status)
             elif order_status["side"] == "BUY":
                 print("hey! a buy order has been filled!")
-                new_order = create_order(header, "SIDE_SELL", order_status)
+                try:
+                    new_order = create_order(header, "SIDE_SELL", order_status)
+                except:
+                    sleep(61)
+                    new_order = create_order(header, "SIDE_SELL", order_status)
             else:
                 raise Exception("no specificed side for order creation\n",
                                 order_status)
