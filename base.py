@@ -186,7 +186,7 @@ def create_order(
                 return final_order
 
             except BinanceAPIException:
-                print("error")
+                print("!!! NO BALANCE ERROR !!!")
                 return None
 
         # if not print so & return None
@@ -209,6 +209,7 @@ def create_order(
                 return final_order
 
             except BinanceAPIException:
+                print("!!! NO BALANCE ERROR !!!")
                 return None
 
         # if not print so & return None

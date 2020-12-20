@@ -18,13 +18,19 @@ def init(apis):
 
 
 def start(apis):
-    apis = init(apis)
+    apiss = init(apis)
+    counter = 0
     while True:
-        for api in apis:
+        for api in apiss:
             print("\n" + api)
             new_orders = main(apis[api]["client"], apis[api]["orders"])
             apis[api]["orders"] = new_orders
             sleep(21)
+            
+        counter += 1
+        
+        if counter >= 40:
+            start(apis)
 
 
 start(apis)
