@@ -245,6 +245,7 @@ def check_orders(header: List[float], orders: List[dict]) -> List[dict]:
                 try:
                     new_order = create_order(header, "SIDE_BUY", order_status)
                 except:
+                    print("order error")
                     sleep(61)
                     new_order = create_order(header, "SIDE_BUY", order_status)
             elif order_status["side"] == "BUY":
@@ -252,6 +253,7 @@ def check_orders(header: List[float], orders: List[dict]) -> List[dict]:
                 try:
                     new_order = create_order(header, "SIDE_SELL", order_status)
                 except:
+                    print("order error")
                     sleep(61)
                     new_order = create_order(header, "SIDE_SELL", order_status)
             else:
