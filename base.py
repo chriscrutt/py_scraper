@@ -12,8 +12,6 @@ from time import sleep
 # import other funcs to make everything more readable
 from misc_funcs import median, quant_round
 
-from binance.exceptions import BinanceAPIException
-
 #########################################################
 
 # import stuff for apis
@@ -111,11 +109,9 @@ def set_order_price(
                 prices.append(old_price + old_price * 0.00076)
                 price = ceil(max(prices) * 100000) / 100000
                 return price
-        except TypeError:
+        except Exception as e:
             print("ERROR! old price =", old_price, "\ntotal order =", order)
-            raise Exception(
-                "TypeError: can't multiply sequence by non-int of type 'float'"
-            )
+            raise Exception(e)
 
     # if an order is not given
     else:
@@ -187,8 +183,8 @@ def create_order(
                       "BTC a pop!!!")
                 return final_order
 
-            except BinanceAPIException:
-                print("!!! NO BALANCE ERROR !!!")
+            except Exception as e:
+                print("!!! ERROR !!!\n" + e)
                 return None
 
         # if not print so & return None
@@ -210,8 +206,8 @@ def create_order(
                       "BTC a pop!!!")
                 return final_order
 
-            except BinanceAPIException:
-                print("!!! NO BALANCE ERROR !!!")
+            except Exception as e:
+                print("!!! ERROR !!!\n" + e)
                 return None
 
         # if not print so & return None
@@ -244,16 +240,16 @@ def check_orders(header: List[float], orders: List[dict]) -> List[dict]:
                 print("hey! a sell order has been filled!")
                 try:
                     new_order = create_order(header, "SIDE_BUY", order_status)
-                except:
-                    print("order error")
+                except Exception as e:
+                    print("order error\n" + e)
                     sleep(61)
                     new_order = create_order(header, "SIDE_BUY", order_status)
             elif order_status["side"] == "BUY":
                 print("hey! a buy order has been filled!")
                 try:
                     new_order = create_order(header, "SIDE_SELL", order_status)
-                except:
-                    print("order error")
+                except Exception as e:
+                    print("order error\n" + e)
                     sleep(61)
                     new_order = create_order(header, "SIDE_SELL", order_status)
             else:

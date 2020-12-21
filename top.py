@@ -33,9 +33,10 @@ def start(apis):
             if counter >= 40:
                 print("\nrestarting\n")
                 start(apis)
-        
-        except:
-            print("\n\nmajor error\n\n")
+
+        except Exception as e:
+            print(f"\n\nmajor error\n\n{e}\n\n")
+            sleep(61)
             start(apis)
 
 
