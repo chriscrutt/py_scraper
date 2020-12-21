@@ -21,16 +21,21 @@ def start(apis):
     apiss = init(apis)
     counter = 0
     while True:
-        for api in apiss:
-            print("\n" + api)
-            new_orders = main(apiss[api]["client"], apiss[api]["orders"])
-            apiss[api]["orders"] = new_orders
-            sleep(21)
+        try:
+            for api in apiss:
+                print("\n" + api)
+                new_orders = main(apiss[api]["client"], apiss[api]["orders"])
+                apiss[api]["orders"] = new_orders
+                sleep(21)
 
-        counter += 1
+            counter += 1
 
-        if counter >= 40:
-            print("\nrestarting\n")
+            if counter >= 40:
+                print("\nrestarting\n")
+                start(apis)
+        
+        except:
+            print("\n\nmajor error\n\n")
             start(apis)
 
 
