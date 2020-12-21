@@ -184,7 +184,7 @@ def create_order(
                 return final_order
 
             except Exception as e:
-                print("!!! ERROR !!!\n" + e)
+                print("!!! ERROR !!!\n", e)
                 return None
 
         # if not print so & return None
@@ -207,7 +207,7 @@ def create_order(
                 return final_order
 
             except Exception as e:
-                print("!!! ERROR !!!\n" + e)
+                print("!!! ERROR !!!\n", e)
                 return None
 
         # if not print so & return None
@@ -241,7 +241,7 @@ def check_orders(header: List[float], orders: List[dict]) -> List[dict]:
                 try:
                     new_order = create_order(header, "SIDE_BUY", order_status)
                 except Exception as e:
-                    print("order error\n" + e)
+                    print("order error\n", e)
                     sleep(61)
                     new_order = create_order(header, "SIDE_BUY", order_status)
             elif order_status["side"] == "BUY":
@@ -249,7 +249,7 @@ def check_orders(header: List[float], orders: List[dict]) -> List[dict]:
                 try:
                     new_order = create_order(header, "SIDE_SELL", order_status)
                 except Exception as e:
-                    print("order error\n" + e)
+                    print("order error\n", e)
                     sleep(61)
                     new_order = create_order(header, "SIDE_SELL", order_status)
             else:
