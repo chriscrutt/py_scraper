@@ -4,7 +4,7 @@ from apis import apis
 
 from binance.client import Client
 
-from time import sleep
+from time import sleep, time
 
 
 def init(apis):
@@ -23,7 +23,9 @@ def start(apis):
     while True:
         try:
             for api in apiss:
-                print("\n" + api)
+                print("\n" + api, apiss[api]["price_increase"],
+                      apiss[api]["interval"], apiss[api]["candles"])
+
                 new_orders = main(apiss[api]["client"], apiss[api]["orders"],
                                   apiss[api]["price_increase"],
                                   apiss[api]["interval"],
@@ -46,4 +48,5 @@ def start(apis):
     start(apis)
 
 
+print(round(time() * 1000))
 start(apis)

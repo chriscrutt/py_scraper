@@ -1,5 +1,3 @@
-a = ""
-
 from apis import apis
 
 from binance.client import Client
@@ -22,8 +20,7 @@ def get_balances(client):
     return [btc_f, btc_l, wbtc_f, wbtc_l]
 
 
-start = 1608753468411
-
+start = 1608769023841
 
 def num_orders(client):
 
@@ -75,6 +72,7 @@ def init(apis):
         P = s_btc + (s_wbtc) / avg_price  # Principal (P)
         t = (round(time()) - start / 1000) / 31557600  # time passed in years
         n = orders_filled / t  # Compound (n): (orders filled/time passed)
+        n = 1
 
         apy = n * ((A / P)**(1 / (n * t)) - 1)
         b_apy = n * (((A - bnb) / P)**(1 / (n * t)) - 1)
