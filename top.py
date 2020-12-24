@@ -24,7 +24,8 @@ def start(apis):
         try:
             for api in apiss:
                 print("\n" + api)
-                new_orders = main(apiss[api]["client"], apiss[api]["orders"])
+                new_orders = main(apiss[api]["client"], apiss[api]["orders"],
+                                  apiss[api]["interval"])
                 apiss[api]["orders"] = new_orders
                 sleep(21)
 
@@ -38,7 +39,7 @@ def start(apis):
             print(f"\n\nmajor error\n\n{e}\n\n")
             sleep(61)
             start(apis)
-            
+
     start(apis)
 
 

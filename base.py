@@ -21,7 +21,7 @@ from misc_funcs import median, quant_round
 
 
 # start of the function, shows us basic stats & returns all current prices
-def header(orders) -> tuple:
+def header(orders, interval) -> tuple:
 
     # gets server time in UNIX
     server_time = client.get_server_time()
@@ -38,7 +38,7 @@ def header(orders) -> tuple:
 
     # get's candles from last 21 daily candles
     candle_data = client.get_klines(symbol="WBTCBTC",
-                                    interval="4h",
+                                    interval=interval,
                                     limit="21")
 
     # gets median highs and lows from candle data
@@ -278,12 +278,12 @@ def check_orders(header: List[float], orders: List[dict]) -> List[dict]:
 
 
 # function for all the marbles
-def main(lient, orders: List[dict]) -> List[dict]:
+def main(lient, orders: List[dict], interval) -> List[dict]:
 
     global client
     client = lient
 
-    head = header(orders)
+    head = header(orders, interval)
 
     orders = check_orders(head, orders)
 
