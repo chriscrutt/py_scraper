@@ -25,7 +25,10 @@ def start(apis):
             for api in apiss:
                 print("\n" + api)
                 new_orders = main(apiss[api]["client"], apiss[api]["orders"],
-                                  apiss[api]["interval"])
+                                  apiss[api]["price_increase"],
+                                  apiss[api]["interval"],
+                                  apiss[api]["candles"])
+
                 apiss[api]["orders"] = new_orders
                 sleep(21)
 

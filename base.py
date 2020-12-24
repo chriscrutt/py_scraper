@@ -21,7 +21,7 @@ from misc_funcs import median, quant_round
 
 
 # start of the function, shows us basic stats & returns all current prices
-def header(orders, interval) -> tuple:
+def header(orders) -> tuple:
 
     # gets server time in UNIX
     server_time = client.get_server_time()
@@ -278,12 +278,22 @@ def check_orders(header: List[float], orders: List[dict]) -> List[dict]:
 
 
 # function for all the marbles
-def main(lient, orders: List[dict], interval) -> List[dict]:
+def main(_client, orders: List[dict], _price_increase, _interval,
+         _candles) -> List[dict]:
 
     global client
-    client = lient
+    client = _client
 
-    head = header(orders, interval)
+    global price_increase
+    price_increase = _price_increase
+
+    global interval
+    interval = _interval
+
+    global candles
+    candles = _candles
+
+    head = header(orders)
 
     orders = check_orders(head, orders)
 
