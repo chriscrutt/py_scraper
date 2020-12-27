@@ -20,7 +20,7 @@ def get_balances(client):
     return [btc_f, btc_l, wbtc_f, wbtc_l]
 
 
-start = 1608769615688
+start = 1609055490357
 
 
 def num_orders(client):
