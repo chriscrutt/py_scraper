@@ -4,6 +4,8 @@ from binance.client import Client
 
 from time import time
 
+from datetime import datetime
+
 from binance.client import Client
 
 
@@ -47,7 +49,9 @@ def num_orders(client):
 
 
 def init(apis):
-    a = "<br>" + str(round(time() * 1000)) + "</br>"
+    a = "<br>" + datetime.utcfromtimestamp(
+        time()).strftime('%Y-%m-%d %H:%M:%S') + "</br>"
+
     for api in apis:
         a += f"<br>{api}</br>"
 
