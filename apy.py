@@ -86,7 +86,7 @@ def init(apis):
 
         a += "<br>%-20s %4.8f   | %23s %4.8f   |   total balance in btc:" % (
             "current btc balance:", btc + btcc, "current wbtc balance:", wbtc +
-            wbtcc) + str(round(A, 8)) + f" - {bnb} = {round(A - bnb, 8)} </br"
+            wbtcc) + str(round(A, 8)) + f" - {bnb} = {round(A - bnb, 8)} </br>"
 
         a += "<br>----------------------------------------------------------------------</br><br></br>"
 
