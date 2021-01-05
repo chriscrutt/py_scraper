@@ -82,13 +82,13 @@ def init(apis):
         b_apy = n * (((A - bnb) / P)**(1 / (n * t)) - 1)
 
         a += f"<br>orders filled: {orders_filled}</br>"
-        a += f"<br>annual percentage yeild: {round(apy * 100, 3)}%   with bnb fees: {round(b_apy * 100, 3)}%</br>"
+        a += f"<br>annual percentage yield: {round(apy * 100, 3)}%   with bnb fees: {round(b_apy * 100, 3)}%</br>"
 
-        a += "<br>%-20s %4.8f   |   %-21s %4.8f   |   total balance in btc:" % (
+        a += "<br>%-20s %4.8f   |   %-21s %4.8f   |   total balance in btc: " % (
             "start btc balance:", s_btc, "start wbtc balance:", s_wbtc) + str(
                 round(P, 8)) + "</br>"
 
-        a += "<br>%-20s %4.8f   | %23s %4.8f   |   total balance in btc:" % (
+        a += "<br>%-20s %4.8f   | %23s %4.8f   |   total balance in btc: " % (
             "current btc balance:", btc + btcc, "current wbtc balance:", wbtc +
             wbtcc) + str(round(A, 8)) + f" - {bnb} = {round(A - bnb, 8)} </br>"
 
