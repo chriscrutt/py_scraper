@@ -47,9 +47,9 @@ def num_orders(client):
 
 
 def init(apis):
-    a = round(time() * 1000), "\n"
+    a = "<br>" + str(round(time() * 1000)) + "</br>"
     for api in apis:
-        a += api, "\n"
+        a += f"<br>{api}</br>"
 
         client = Client(apis[api]["pub"], apis[api]["priv"])
 
@@ -77,22 +77,21 @@ def init(apis):
         apy = n * ((A / P)**(1 / (n * t)) - 1)
         b_apy = n * (((A - bnb) / P)**(1 / (n * t)) - 1)
 
-        a += "orders filled:", orders_filled, "\n"
-        a += "annual percentage yeild:", str(
-            round(apy * 100, 3)) + "%   with bnb fees:", str(
-                round(b_apy * 100, 3)) + "%", "\n"
+        a += f"<br>orders filled: {orders_filled}</br>"
+        a += f"<br>annual percentage yeild: {round(apy * 100, 3)}%   with bnb fees: {round(b_apy * 100, 3)}%</br>"
 
-        a += "%-20s %4.8f   |   %-21s %4.8f   |   total balance in btc:" % (
-            "start btc balance:", s_btc, "start wbtc balance:", s_wbtc), round(
-                P, 8), "\n"
+        a += "<br>%-20s %4.8f   |   %-21s %4.8f   |   total balance in btc:" % (
+            "start btc balance:", s_btc, "start wbtc balance:", s_wbtc) + str(
+                round(P, 8)) + "</br>"
 
-        a += "%-20s %4.8f   | %23s %4.8f   |   total balance in btc:" % (
-            "current btc balance:", btc + btcc, "current wbtc balance:",
-            wbtc + wbtcc), round(A, 8), "-", bnb, "=", round(A - bnb, 8), "\n"
+        a += "<br>%-20s %4.8f   | %23s %4.8f   |   total balance in btc:" % (
+            "current btc balance:", btc + btcc, "current wbtc balance:", wbtc +
+            wbtcc) + str(round(A, 8)) + f" - {bnb} = {round(A - bnb, 8)} </br"
 
-        a += "----------------------------------------------------------------------", "\n\n"
+        a += "<br>----------------------------------------------------------------------</br><br></br>"
 
-    return a
+    b = f"<div style = \"font-family:roboto mono;\">{a}</div>"
+    return b
 
 
 def eh():
