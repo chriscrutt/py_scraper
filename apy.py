@@ -85,13 +85,13 @@ def init(apis):
         a += f"<br>orders filled: {orders_filled}</br>"
         a += f"<br>apy: {round(apy * 100, 3)}%   with bnb fees: {round(b_apy * 100, 3)}%</br>"
 
-        a += "<br>%-20s %4.8f   |   %-20s %4.8f   |   %-21s %4.8f   |   total balance in btc: " % (
-            "start bnb balance:", s_bnb, "start btc balance:", s_btc,
-            "start wbtc balance:", s_wbtc) + str(round(P, 8)) + "</br>"
+        a += "<br>%-20s %4.8f   |   %-20s %4.8f   |   %-21s %4.8f   |   total in btc: " % (
+            "start bnb:", s_bnb, "start btc:", s_btc,
+            "start wbtc:", s_wbtc) + str(round(P, 8)) + "</br>"
 
-        a += "<br>%-20s %4.8f   |   %-20s %4.8f   | %21s %4.8f   |   total balance in btc: " % (
-            "current bnb balance:", bnb, "current btc balance:", btc + btcc,
-            "current wbtc balance:", wbtc + wbtcc
+        a += "<br>%-20s %4.8f   |   %-20s %4.8f   | %21s %4.8f   |   total in btc: " % (
+            "current bnb:", bnb, "current btc:", btc + btcc,
+            "current wbtc:", wbtc + wbtcc
         ) + f"{round(A, 8)}  |  with fees: {round(A - bnb_lost * bnb_price, 8)}</br>"
 
         a += "<br>----------------------------------------------------------------------</br><br></br>"
