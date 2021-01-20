@@ -23,6 +23,7 @@ def get_balances(client):
 
 
 start = 1609055490357
+s_bnb = 60
 
 
 def num_orders(client):
@@ -30,10 +31,10 @@ def num_orders(client):
     t = client.get_my_trades(symbol='WBTCBTC', startTime=start, limit=1000)
 
     avg_price = float(client.get_avg_price(symbol='BNBBTC')["price"])
+    bnb = client.get_asset_balance("BNB")
+    c_bnb = bnb["free"] + bnb["locked"]
 
     counter = len(t)
-
-    bnb = sum([float(i["commission"]) for i in t])
 
     while len(t) == 1000:
 
@@ -43,14 +44,13 @@ def num_orders(client):
 
         counter += len(t)
 
-        bnb += sum([float(i["commission"]) for i in t])
-
-    return counter, bnb * avg_price
+    return counter, avg_price, c_bnb
 
 
 def init(apis):
-    a = "<br>" + datetime.utcfromtimestamp(
-        time()).strftime('%Y-%m-%d %H:%M:%S') + "</br>"
+    a = "<br>" + datetime.utcfromtimestamp(start / 1000).strftime(
+        '%Y-%m-%d %H:%M:%S') + "</br><br>" + datetime.utcfromtimestamp(
+            time()).strftime('%Y-%m-%d %H:%M:%S') + "</br>"
 
     for api in apis:
         a += f"<br>{api}</br>"
@@ -71,7 +71,8 @@ def init(apis):
 
         avg_price = float(client.get_avg_price(symbol='WBTCBTC')["price"])
 
-        orders_filled, bnb = num_orders(client)
+        orders_filled, bnb_price, bnb = num_orders(client)
+        bnb_lost = s_bnb - bnb
 
         A = btc + btcc + (wbtc + wbtcc) / avg_price  # Total P+I (A)
         P = s_btc + (s_wbtc) / avg_price  # Principal (P)
@@ -79,18 +80,19 @@ def init(apis):
         n = orders_filled / t  # Compound (n): (orders filled/time passed)
 
         apy = n * ((A / P)**(1 / (n * t)) - 1)
-        b_apy = n * (((A - bnb) / P)**(1 / (n * t)) - 1)
+        b_apy = n * (((A - bnb_lost * bnb_price) / P)**(1 / (n * t)) - 1)
 
         a += f"<br>orders filled: {orders_filled}</br>"
-        a += f"<br>annual percentage yield: {round(apy * 100, 3)}%   with bnb fees: {round(b_apy * 100, 3)}%</br>"
+        a += f"<br>apy: {round(apy * 100, 3)}%   with bnb fees: {round(b_apy * 100, 3)}%</br>"
 
-        a += "<br>%-20s %4.8f   |   %-21s %4.8f   |   total balance in btc: " % (
-            "start btc balance:", s_btc, "start wbtc balance:", s_wbtc) + str(
-                round(P, 8)) + "</br>"
+        a += "<br>%-20s %4.8f   |   %-20s %4.8f   |   %-21s %4.8f   |   total balance in btc: " % (
+            "start bnb balance:", s_bnb, "start btc balance:", s_btc,
+            "start wbtc balance:", s_wbtc) + str(round(P, 8)) + "</br>"
 
-        a += "<br>%-20s %4.8f   | %23s %4.8f   |   total balance in btc: " % (
-            "current btc balance:", btc + btcc, "current wbtc balance:", wbtc +
-            wbtcc) + str(round(A, 8)) + f" - {bnb} = {round(A - bnb, 8)} </br>"
+        a += "<br>%-20s %4.8f   |   %-20s %4.8f   | %21s %4.8f   |   total balance in btc: " % (
+            "current bnb balance:", bnb, "current btc balance:", btc + btcc,
+            "current wbtc balance:", wbtc + wbtcc), round(
+                A, 8), " | with fees:", round(A - bnb_lost * bnb_price, 8), "</br>"
 
         a += "<br>----------------------------------------------------------------------</br><br></br>"
 
