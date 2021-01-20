@@ -94,6 +94,8 @@ def init(apis):
             wbtc + wbtcc
         ) + f"{round(A, 8)}  |  with fees: {round(A - bnb_lost * bnb_price, 8)}</br>"
 
+        a += f"<br>btc made: {A - P}  |  with bnb fees: {A - P - bnb_lost * bnb_price}</br>"
+
         a += "<br>----------------------------------------------------------------------</br><br></br>"
 
     b = f"<div style = \"font-family:roboto mono;\">{a}</div>"
