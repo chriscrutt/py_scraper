@@ -23,7 +23,6 @@ def get_balances(client):
 
 
 start = 1609055490357
-s_bnb = 60
 
 
 def num_orders(client):
@@ -58,7 +57,7 @@ def init(apis):
 
         client = Client(apis[api]["pub"], apis[api]["priv"])
 
-        s_btc, s_wbtc = apis[api]["start_balance"]
+        s_bnb, s_btc, s_wbtc = apis[api]["start_balance"]
 
         shucks = get_balances(client)
         btc, btcc, wbtc, wbtcc = shucks
