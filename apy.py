@@ -32,7 +32,7 @@ def num_orders(client):
 
     avg_price = float(client.get_avg_price(symbol='BNBBTC')["price"])
     bnb = client.get_asset_balance("BNB")
-    c_bnb = bnb["free"] + bnb["locked"]
+    c_bnb = float(bnb["free"]) + float(bnb["locked"])
 
     counter = len(t)
 
