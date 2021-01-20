@@ -48,9 +48,10 @@ def num_orders(client):
 
 
 def init(apis):
-    a = "<br>" + datetime.utcfromtimestamp(start / 1000).strftime(
-        '%Y-%m-%d %H:%M:%S') + "</br><br>" + datetime.utcfromtimestamp(
-            time()).strftime('%Y-%m-%d %H:%M:%S') + "</br>"
+    a = "<br>" + str(round(start / 1000)) + " | " + datetime.utcfromtimestamp(
+        start / 1000).strftime('%Y-%m-%d %H:%M:%S') + "</br><br>" + str(
+            round(time())) + " | " + datetime.utcfromtimestamp(
+                time()).strftime('%Y-%m-%d %H:%M:%S') + "</br>"
 
     for api in apis:
         a += f"<br>{api}</br>"
@@ -86,12 +87,12 @@ def init(apis):
         a += f"<br>apy: {round(apy * 100, 3)}%   with bnb fees: {round(b_apy * 100, 3)}%</br>"
 
         a += "<br>%-20s %4.8f   |   %-20s %4.8f   |   %-21s %4.8f   |   total in btc: " % (
-            "start bnb:", s_bnb, "start btc:", s_btc,
-            "start wbtc:", s_wbtc) + str(round(P, 8)) + "</br>"
+            "start bnb:", s_bnb, "start btc:", s_btc, "start wbtc:",
+            s_wbtc) + str(round(P, 8)) + "</br>"
 
         a += "<br>%-20s %4.8f   |   %-20s %4.8f   | %21s %4.8f   |   total in btc: " % (
-            "current bnb:", bnb, "current btc:", btc + btcc,
-            "current wbtc:", wbtc + wbtcc
+            "current bnb:", bnb, "current btc:", btc + btcc, "current wbtc:",
+            wbtc + wbtcc
         ) + f"{round(A, 8)}  |  with fees: {round(A - bnb_lost * bnb_price, 8)}</br>"
 
         a += "<br>----------------------------------------------------------------------</br><br></br>"
