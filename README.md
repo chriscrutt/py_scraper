@@ -2,6 +2,7 @@ for prerequesites and such go [here](./tut.md)
 # TODO:
 - [x] output when an old order has been filled
 ## APY calculator
+- [ ] take screenshot of apy & time passed everytime bnb is deposited
 - [x] takes starting btc & wbtc balance & timestamp (& price just in case)
 - [x] does the math to calculate apy based off of current btc & wbtc balance & bnb
 - [x] make accessable on a [webpage](http://104.9.116.163)
