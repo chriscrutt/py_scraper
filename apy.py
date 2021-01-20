@@ -92,7 +92,7 @@ def init(apis):
         a += "<br>%-20s %4.8f   |   %-20s %4.8f   | %21s %4.8f   |   total balance in btc: " % (
             "current bnb balance:", bnb, "current btc balance:", btc + btcc,
             "current wbtc balance:", wbtc + wbtcc
-        ), + f"{round(A, 8)}  |  with fees: {round(A - bnb_lost * bnb_price, 8)}</br>"
+        ) + f"{round(A, 8)}  |  with fees: {round(A - bnb_lost * bnb_price, 8)}</br>"
 
         a += "<br>----------------------------------------------------------------------</br><br></br>"
 
