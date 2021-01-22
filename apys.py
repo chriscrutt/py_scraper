@@ -1,4 +1,4 @@
-from apis import api
+from apis import apis
 
 from binance.client import Client
 
@@ -103,7 +103,7 @@ def init(apis):
 
 
 def eh():
-    return ''.join(map(str, init(api)))
+    return ''.join(map(str, init(apis)))
 
 
 print(eh())

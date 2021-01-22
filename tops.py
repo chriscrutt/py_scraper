@@ -1,6 +1,6 @@
 from base import main
 
-from apis import api
+from apis import apis
 
 from binance.client import Client
 
@@ -49,4 +49,4 @@ def start(apis):
 
 
 print(round(time() * 1000))
-start(api)
+start(apis)
