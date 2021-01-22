@@ -1,4 +1,4 @@
-from apis import api
+from api import api
 
 from binance.client import Client
 
