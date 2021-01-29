@@ -22,10 +22,10 @@ def get_balances(client):
     return [btc_f, btc_l, wbtc_f, wbtc_l]
 
 
-start = 1611297693597
+# start = 1611297693597
 
 
-def num_orders(client):
+def num_orders(client, start):
 
     t = client.get_my_trades(symbol='WBTCBTC', startTime=start, limit=1000)
 
@@ -46,7 +46,7 @@ def num_orders(client):
     return counter, avg_price, c_bnb
 
 
-def init(apis):
+def init(apis, start):
     a = "<br>" + str(round(start / 1000)) + " | " + datetime.utcfromtimestamp(
         start / 1000).strftime('%Y-%m-%d %H:%M:%S') + "</br><br>" + str(
             round(time())) + " | " + datetime.utcfromtimestamp(
@@ -71,7 +71,7 @@ def init(apis):
 
         avg_price = float(client.get_avg_price(symbol='WBTCBTC')["price"])
 
-        orders_filled, bnb_price, bnb = num_orders(client)
+        orders_filled, bnb_price, bnb = num_orders(client, start)
         bnb_lost = s_bnb - bnb
 
         A = btc + btcc + (wbtc + wbtcc) / avg_price  # Total P+I (A)
@@ -102,8 +102,8 @@ def init(apis):
     return b
 
 
-def eh():
-    return ''.join(map(str, init(api)))
+def eh(start):
+    return ''.join(map(str, init(api, start)))
 
 
-print(eh())
+# print(eh())
