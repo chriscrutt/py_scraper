@@ -1,6 +1,6 @@
 from binance.client import Client
 
-from apis import apis
+from apis import api
 
 from time import time
 
@@ -14,4 +14,4 @@ def delete(apis):
         
     print("finished.")
         
-delete(apis)
+delete(api)
