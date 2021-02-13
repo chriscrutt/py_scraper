@@ -12,6 +12,8 @@ app = Flask(__name__)
 def index():
     return eh(1611908665000)
 
+# og restart first trade 1611908665000
+# new first trade
 
 if __name__ == "__main__":
     app.run("104.9.116.163", 82)
