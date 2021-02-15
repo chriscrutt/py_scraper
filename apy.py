@@ -46,7 +46,7 @@ def num_orders(client, start):
     return counter, avg_price, c_bnb
 
 
-def init(apis, start):
+def init(apis, start, which_balance):
     a = "<br>" + str(round(start / 1000)) + " | " + datetime.utcfromtimestamp(
         start / 1000).strftime('%Y-%m-%d %H:%M:%S') + "</br><br>" + str(
             round(time())) + " | " + datetime.utcfromtimestamp(
@@ -57,7 +57,7 @@ def init(apis, start):
 
         client = Client(apis[api]["pub"], apis[api]["priv"])
 
-        s_bnb, s_btc, s_wbtc = apis[api]["start_balance"]
+        s_bnb, s_btc, s_wbtc = apis[api][which_balance]
 
         shucks = get_balances(client)
         btc, btcc, wbtc, wbtcc = shucks
@@ -102,8 +102,8 @@ def init(apis, start):
     return b
 
 
-def eh(start):
-    return ''.join(map(str, init(api, start)))
+def eh(start, which_balance):
+    return ''.join(map(str, init(api, start, which_balance)))
 
 
 # print(eh())
