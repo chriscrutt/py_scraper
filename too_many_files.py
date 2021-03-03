@@ -73,7 +73,7 @@ def main(last_trade: List[dict]) -> None:
                 complete_trade("BUY", _open * 1.001)
 
         # if it is a buy order
-        if og_side == "BUY":
+        elif og_side == "BUY":
             # and the new open base price is better
             if _open * 0.999 < og_price:
                 # cancel current order
@@ -173,7 +173,7 @@ def start() -> None:
     readable_time = datetime.datetime.fromtimestamp(
         round(server_time["serverTime"]) / 1000).strftime('%Y-%m-%d %H:%M:%S')
 
-    print(server_time, "-", readable_time)
+    print(server_time["server_time"], "-", readable_time)
 
     # loop forever
     while True:
