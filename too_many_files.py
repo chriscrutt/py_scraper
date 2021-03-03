@@ -41,7 +41,7 @@ def main(last_trade: List[dict]) -> None:
         round(server_time) / 1000).strftime('%Y-%m-%d %H:%M:%S')
 
     # prints initial data
-    print("\n", server_time, "-", readable_time, "| Last Trade", og_side + "S",
+    print("\n", server_time, "-", readable_time, "| Current Order", og_side + "S",
           last_trade[0]["origQty"], "WBTC at", og_price, "| Open Price =",
           _open, "| Current Price =", current_price)
 
