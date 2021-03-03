@@ -53,7 +53,6 @@ def init(apis, start, which_balance):
                 time()).strftime('%Y-%m-%d %H:%M:%S') + "</br>"
 
     for api in apis:
-        a += f"<br>{api}</br>"
 
         client = Client(apis[api]["pub"], apis[api]["priv"])
 

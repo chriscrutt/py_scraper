@@ -34,25 +34,25 @@ def main(last_trade: List[dict]) -> None:
     current_price = float(candle_data[0][4])
 
     # gets server time in UNIX
-    server_time = client.get_server_time()
+    server_time = client.get_server_time()["serverTime"]
 
     # makes server time readable to normal people
     readable_time = datetime.datetime.fromtimestamp(
-        round(server_time["serverTime"]) / 1000).strftime('%Y-%m-%d %H:%M:%S')
+        round(server_time) / 1000).strftime('%Y-%m-%d %H:%M:%S')
 
     # prints initial data
-    print("\n", server_time["serverTime"], "-", readable_time,
-          "| Last Trade Buy", last_trade[0]["origQty"], "WBTC at",
-          last_trade[0]["price"], "| Open Price =", _open, "| Current Price =",
-          current_price)
+    print("\n", server_time, "-", readable_time, "| Last Trade", og_side + "S",
+          last_trade[0]["origQty"], "WBTC at", og_price, "| Open Price =",
+          _open, "| Current Price =", current_price)
 
+    status = last_trade[0]["status"]
     # checking if trade was filled
-    if last_trade[0]["status"] == "FILLED":
+    if status == "FILLED":
         # initiate a trade using the above info
         initiate_trade(og_price, og_side, _open)
 
     # if it's only partially filled
-    elif last_trade[0]["status"] == "PARTIALLY_FILLED":
+    elif status == "PARTIALLY_FILLED":
         # show how much of it has been filled
         print("Partially filled -", last_trade[0]["executedQty"],
               "already executed")
@@ -128,14 +128,13 @@ def complete_trade(og_side: str, base_price: float) -> None:
         balance = float(client.get_asset_balance(asset='BTC')["free"])
 
         # makes sure there's enough balance to initiate trade
-        assert (balance >= 0.0001
-                and balance * base_price >= 0.0001)
+        assert (balance >= 0.0001 and balance * base_price >= 0.0001)
 
         # create limit buy order
-        order = client.order_limit_buy(
-            symbol='WBTCBTC',
-            quantity=floor(balance * 10000) / 10000,
-            price=floor(base_price * 100000) / 100000)
+        order = client.order_limit_buy(symbol='WBTCBTC',
+                                       quantity=floor(balance * 10000) / 10000,
+                                       price=floor(base_price * 100000) /
+                                       100000)
 
         print("put in an order to buy", order["origQty"], "WBTC for",
               order["price"])
@@ -147,8 +146,7 @@ def complete_trade(og_side: str, base_price: float) -> None:
         balance = float(client.get_asset_balance(asset='WBTC')["free"])
 
         # makes sure there's enough balance to initiate trade
-        assert (balance >= 0.0001
-                and balance / base_price >= 0.0001)
+        assert (balance >= 0.0001 and balance / base_price >= 0.0001)
 
         # create limit sell order
         order = client.order_limit_sell(
