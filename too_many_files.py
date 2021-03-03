@@ -125,7 +125,7 @@ def complete_trade(og_side: str, base_price: float) -> None:
     if og_side == "SELL":
 
         # get WBTC balance
-        balance = float(client.get_asset_balance(asset='WBTC')["free"])
+        balance = float(client.get_asset_balance(asset='BTC')["free"])
 
         # makes sure there's enough balance to initiate trade
         assert (balance >= 0.0001
@@ -144,7 +144,7 @@ def complete_trade(og_side: str, base_price: float) -> None:
     elif og_side == "BUY":
 
         # get BTC balance
-        balance = float(client.get_asset_balance(asset='BTC')["free"])
+        balance = float(client.get_asset_balance(asset='WBTC')["free"])
 
         # makes sure there's enough balance to initiate trade
         assert (balance >= 0.0001
