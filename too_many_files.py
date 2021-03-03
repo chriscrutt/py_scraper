@@ -23,15 +23,15 @@ def main(last_trade: List[dict]) -> None:
     # was this a buy or sell order
     og_side = last_trade[0]["side"]
     # what was the price of this order
-    og_price = last_trade[0]["price"]
+    og_price = float(last_trade[0]["price"])
 
     # get current candle data
     candle_data = client.get_klines(symbol="WBTCBTC", interval="1d", limit="1")
 
     # set opening price of candle
-    _open = candle_data[0][1]
+    _open = float(candle_data[0][1])
     # set current price
-    current_price = candle_data[0][4]
+    current_price = float(candle_data[0][4])
 
     # gets server time in UNIX
     server_time = client.get_server_time()
@@ -125,16 +125,16 @@ def complete_trade(og_side: str, base_price: float) -> None:
     if og_side == "SELL":
 
         # get WBTC balance
-        balance = client.get_asset_balance(asset='WBTC')
+        balance = float(client.get_asset_balance(asset='WBTC')["free"])
 
         # makes sure there's enough balance to initiate trade
-        assert (balance["free"] >= 0.0001
-                and balance["free"] * base_price >= 0.0001)
+        assert (balance >= 0.0001
+                and balance * base_price >= 0.0001)
 
         # create limit buy order
         order = client.order_limit_buy(
             symbol='WBTCBTC',
-            quantity=floor(balance["free"] * 10000) / 10000,
+            quantity=floor(balance * 10000) / 10000,
             price=floor(base_price * 100000) / 100000)
 
         print("put in an order to buy", order["origQty"], "WBTC for",
@@ -144,16 +144,16 @@ def complete_trade(og_side: str, base_price: float) -> None:
     elif og_side == "BUY":
 
         # get BTC balance
-        balance = client.get_asset_balance(asset='BTC')
+        balance = float(client.get_asset_balance(asset='BTC')["free"])
 
         # makes sure there's enough balance to initiate trade
-        assert (balance["free"] >= 0.0001
-                and balance["free"] / base_price >= 0.0001)
+        assert (balance >= 0.0001
+                and balance / base_price >= 0.0001)
 
         # create limit sell order
         order = client.order_limit_sell(
             symbol='WBTCBTC',
-            quantity=floor(balance["free"] * 10000) / 10000,
+            quantity=floor(balance * 10000) / 10000,
             price=ceil(base_price * 100000) / 100000)
 
         print("put in an order to sell", order["origQty"], "WBTC for",
