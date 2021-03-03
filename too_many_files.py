@@ -173,7 +173,7 @@ def start() -> None:
     readable_time = datetime.datetime.fromtimestamp(
         round(server_time["serverTime"]) / 1000).strftime('%Y-%m-%d %H:%M:%S')
 
-    print(server_time["server_time"], "-", readable_time)
+    print(server_time["serverTime"], "-", readable_time)
 
     # loop forever
     while True:
