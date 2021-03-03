@@ -20,48 +20,70 @@ client = Client(api["neo 0.076 8h 21"]["pub"], api["neo 0.076 8h 21"]["priv"])
 def main(last_trade: List[dict]) -> None:
     """controller function that gathers kline and last trade data"""
 
-    # if order has been filled
-    if "FILLED" in last_trade[0]["status"]:
+    # was this a buy or sell order
+    og_side = last_trade[0]["side"]
+    # what was the price of this order
+    og_price = last_trade[0]["price"]
 
-        # was this a buy or sell order
-        og_side = last_trade[0]["side"]
-        # what was the price of this order
-        og_price = last_trade[0]["price"]
+    # get current candle data
+    candle_data = client.get_klines(symbol="WBTCBTC", interval="1d", limit="1")
 
-        # get current candle data
-        candle_data = client.get_klines(symbol="WBTCBTC",
-                                        interval="1d",
-                                        limit="1")
+    # set opening price of candle
+    _open = candle_data[0][1]
+    # set current price
+    current_price = candle_data[0][4]
 
-        # set opening price of candle
-        _open = candle_data[0][1]
-        # set current price
-        current_price = candle_data[0][4]
+    # gets server time in UNIX
+    server_time = client.get_server_time()
 
-        # gets server time in UNIX
-        server_time = client.get_server_time()
+    # makes server time readable to normal people
+    readable_time = datetime.datetime.fromtimestamp(
+        round(server_time["serverTime"]) / 1000).strftime('%Y-%m-%d %H:%M:%S')
 
-        # makes server time readable to normal people
-        readable_time = datetime.datetime.fromtimestamp(
-            round(server_time["serverTime"]) /
-            1000).strftime('%Y-%m-%d %H:%M:%S')
+    # prints initial data
+    print("\n" + server_time["serverTime"], "-", readable_time,
+          "| Last Trade Buy", last_trade[0]["origQty"], "WBTC at",
+          last_trade[0]["price"], "| Open Price =", _open, "| Current Price =",
+          current_price)
 
-        # prints initial data
-        print("\n" + server_time["serverTime"], "-", readable_time,
-              "| Last Trade Buy", last_trade[0]["origQty"], "WBTC at",
-              last_trade[0]["price"], "| Open Price =", _open,
-              "| Current Price =", current_price)
+    # checking if trade was filled
+    if last_trade[0]["status"] == "FILLED":
+        # initiate a trade using the above info
+        initiate_trade(og_price, og_side, _open)
 
-        # checking if trade was filled
-        if last_trade[0]["status"] == "FILLED":
-            # initiate a trade using the above info
-            initiate_trade(og_price, og_side, _open)
+    # if it's only partially filled
+    elif last_trade[0]["status"] == "PARTIALLY_FILLED":
+        # show how much of it has been filled
+        print("Partially filled -", last_trade[0]["executedQty"],
+              "already executed")
 
-        # if it's only partially filled
-        elif last_trade[0]["status"] == "PARTIALLY_FILLED":
-            # show how much of it has been filled
-            print("Partially filled -", last_trade[0]["executedQty"],
-                  "already executed")
+    # if order hasn't been filled or partially filled
+    else:
+        # if it is a sell order
+        if og_side == "SELL":
+            # and the new open base price is better
+            if _open * 1.001 > og_price:
+                # cancel current order
+                client.cancel_order(symbol="WBTCBTC",
+                                    orderId=last_trade[0]["orderId"])
+
+                print("replacing order with a better price")
+
+                # make a new order (remember putting 'buy' will create a sell order)
+                complete_trade("BUY", _open * 1.001)
+
+        # if it is a buy order
+        if og_side == "BUY":
+            # and the new open base price is better
+            if _open * 0.999 < og_price:
+                # cancel current order
+                client.cancel_order(symbol="WBTCBTC",
+                                    orderId=last_trade[0]["orderId"])
+
+                print("replacing order with a better price")
+
+                # make a new order (remember putting 'sell' will create a buy order)
+                complete_trade("SELL", _open * 0.999)
 
 
 def initiate_trade(og_price: float, og_side: str, _open: float) -> None:
