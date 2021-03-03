@@ -14,6 +14,7 @@ def index():
 
 # og restart 1611297693597
 # new 1613190328336
+# open 
 
 
 if __name__ == "__main__":
