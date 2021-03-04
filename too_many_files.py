@@ -41,9 +41,9 @@ def main(last_trade: List[dict]) -> None:
         round(server_time) / 1000).strftime('%Y-%m-%d %H:%M:%S')
 
     # prints initial data
-    print("\n", server_time, "-", readable_time, "| Current Order", og_side + "S",
-          last_trade[0]["origQty"], "WBTC at", og_price, "| Open Price =",
-          _open, "| Current Price =", current_price)
+    print("\n", server_time, "-", readable_time, "| Current Order",
+          og_side + "S", last_trade[0]["origQty"], "WBTC at", og_price,
+          "| Open Price =", _open, "| Current Price =", current_price)
 
     status = last_trade[0]["status"]
     # checking if trade was filled
@@ -131,10 +131,10 @@ def complete_trade(og_side: str, base_price: float) -> None:
         assert (balance >= 0.0001 and balance * base_price >= 0.0001)
 
         # create limit buy order
-        order = client.order_limit_buy(symbol='WBTCBTC',
-                                       quantity=floor(balance * 10000) / 10000,
-                                       price=floor(base_price * 100000) /
-                                       100000)
+        order = client.order_limit_buy(
+            symbol='WBTCBTC',
+            quantity=floor(balance / base_price * 10000) / 10000,
+            price=floor(base_price * 100000) / 100000)
 
         print("put in an order to buy", order["origQty"], "WBTC for",
               order["price"])
