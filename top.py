@@ -1,10 +1,9 @@
-from base import main
-
-from apis import api
+from time import sleep, time
 
 from binance.client import Client
 
-from time import sleep, time
+from apis import api
+from base import main
 
 
 def init(apis):

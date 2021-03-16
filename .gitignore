@@ -9,3 +9,4 @@ templates/blog.html
 __pycache__/apy.cpython-39.pyc
 __pycache__/delete.cpython-39.pyc
 api.py
+us_duster.py

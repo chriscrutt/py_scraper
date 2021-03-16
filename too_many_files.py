@@ -1,23 +1,18 @@
 """here's a module docstring"""
 
-from typing import List
-
 import datetime
-
 from math import ceil, floor
-
 from time import sleep
+from typing import List
 
 from binance.client import Client
 
 from apis import api
 
-client = Client(api["neo 0.076 8h 21"]["pub"], api["neo 0.076 8h 21"]["priv"])
-
 ################################################################################
 
 
-def main(last_trade: List[dict]) -> None:
+def main(client, last_trade: List[dict]) -> None:
     """controller function that gathers kline and last trade data"""
 
     # was this a buy or sell order
@@ -49,7 +44,7 @@ def main(last_trade: List[dict]) -> None:
     # checking if trade was filled
     if status == "FILLED":
         # initiate a trade using the above info
-        initiate_trade(og_price, og_side, _open)
+        initiate_trade(client, og_price, og_side, _open)
 
     # if it's only partially filled
     elif status == "PARTIALLY_FILLED":
@@ -70,7 +65,7 @@ def main(last_trade: List[dict]) -> None:
                 print("replacing order with a better price")
 
                 # make a new order (remember putting 'buy' will create a sell order)
-                complete_trade("BUY", _open * 1.001)
+                complete_trade(client, "BUY", _open * 1.001)
 
         # if it is a buy order
         elif og_side == "BUY":
@@ -83,10 +78,10 @@ def main(last_trade: List[dict]) -> None:
                 print("replacing order with a better price")
 
                 # make a new order (remember putting 'sell' will create a buy order)
-                complete_trade("SELL", _open * 0.999)
+                complete_trade(client, "SELL", _open * 0.999)
 
 
-def initiate_trade(og_price: float, og_side: str, _open: float) -> None:
+def initiate_trade(client, og_price: float, og_side: str, _open: float) -> None:
     """finalizes price points for buy and sell orders"""
 
     # if last order was a sell
@@ -101,7 +96,7 @@ def initiate_trade(og_price: float, og_side: str, _open: float) -> None:
         base_price = min(new_open, new_price)
 
         # complete the trade
-        complete_trade(og_side, base_price)
+        complete_trade(client, og_side, base_price)
 
     # if last order was a buy
     elif og_side == "BUY":
@@ -115,10 +110,10 @@ def initiate_trade(og_price: float, og_side: str, _open: float) -> None:
         base_price = max(new_open, new_price)
 
         # complete the trade
-        complete_trade(og_side, base_price)
+        complete_trade(client, og_side, base_price)
 
 
-def complete_trade(og_side: str, base_price: float) -> None:
+def complete_trade(client, og_side: str, base_price: float) -> None:
     """completes the trade and prints as such"""
 
     # if old order was a sell order
@@ -161,7 +156,7 @@ def complete_trade(og_side: str, base_price: float) -> None:
 ################################################################################
 
 
-def start() -> None:
+def start(client) -> None:
     """start of the program"""
 
     # gets server time in UNIX
@@ -176,14 +171,17 @@ def start() -> None:
     # loop forever
     while True:
 
+        client = Client(api["neo 0.076 8h 21"]["pub"],
+                        api["neo 0.076 8h 21"]["priv"])
+
         # gets last order created
         last_trade = client.get_all_orders(symbol="WBTCBTC", limit=1)
 
         # starts main function
-        main(last_trade)
+        main(client, last_trade)
 
         # sleeps for 61 seconds for funzies
         sleep(61)
 
 
-start()
+start(Client(api["neo 0.076 8h 21"]["pub"], api["neo 0.076 8h 21"]["priv"]))
